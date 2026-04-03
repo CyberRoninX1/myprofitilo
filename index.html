@@ -6,7 +6,6 @@
     <title>CyberRoninX1 | Full Stack Developer</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- GSAP for premium animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
@@ -17,75 +16,99 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: #ffffff;
-            color: #0a0a0f;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0a0a0f;
+            --text-secondary: #475569;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --gradient-start: #8b5cf6;
+            --gradient-end: #3b82f6;
         }
 
-        /* Premium Gradient Background */
-        .bg-gradient {
+        body.dark {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #0f0f1a;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --card-bg: #1e1e2e;
+            --border-color: #334155;
+            --gradient-start: #a855f7;
+            --gradient-end: #60a5fa;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Animated Robotic Background */
+        .robot-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -2;
-            background: radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
-                        linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
         }
 
-        /* Animated Blobs */
-        .blob {
-            position: fixed;
-            width: 600px;
-            height: 600px;
+        .robot-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .robot-part {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.1));
             border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            animation: floatBlob 20s ease-in-out infinite;
+            filter: blur(40px);
+            animation: floatRobot 15s ease-in-out infinite;
         }
 
-        .blob-1 {
-            background: rgba(139, 92, 246, 0.08);
-            top: -200px;
-            right: -200px;
-            animation-delay: 0s;
+        @keyframes floatRobot {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            50% { transform: translate(50px, -30px) scale(1.2); opacity: 0.5; }
         }
 
-        .blob-2 {
-            background: rgba(59, 130, 246, 0.08);
-            bottom: -200px;
-            left: -200px;
-            width: 500px;
-            height: 500px;
-            animation-delay: -5s;
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .blob-3 {
-            background: rgba(236, 72, 153, 0.05);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 800px;
-            height: 800px;
-            animation-delay: -10s;
-        }
-
-        @keyframes floatBlob {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
+        .theme-toggle:hover {
+            transform: scale(1.1);
         }
 
         /* Custom Cursor */
         .cursor {
-            width: 12px;
-            height: 12px;
-            background: #8b5cf6;
+            width: 8px;
+            height: 8px;
+            background: var(--gradient-start);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
@@ -95,8 +118,8 @@
         }
 
         .cursor-follower {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             border: 2px solid rgba(139, 92, 246, 0.3);
             border-radius: 50%;
             position: fixed;
@@ -104,7 +127,6 @@
             z-index: 9998;
             transition: 0.15s;
             transform: translate(-50%, -50%);
-            backdrop-filter: blur(2px);
         }
 
         /* Loading Screen */
@@ -114,7 +136,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #ffffff;
+            background: var(--bg-primary);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -122,28 +144,17 @@
             transition: 0.5s;
         }
 
-        .loader-content {
-            text-align: center;
-        }
-
         .loader-circle {
-            width: 80px;
-            height: 80px;
-            border: 3px solid #e2e8f0;
-            border-top-color: #8b5cf6;
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gradient-start);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-
-        .loader-text {
-            font-family: 'JetBrains Mono', monospace;
-            color: #8b5cf6;
-            letter-spacing: 2px;
         }
 
         /* Navigation */
@@ -153,9 +164,9 @@
             left: 0;
             right: 0;
             padding: 1.2rem 5%;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(var(--bg-primary), 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            border-bottom: 1px solid var(--border-color);
             z-index: 100;
             transition: all 0.3s;
         }
@@ -171,7 +182,7 @@
         .logo {
             font-size: 1.6rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -183,7 +194,7 @@
         }
 
         .nav-links a {
-            color: #475569;
+            color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
             transition: 0.3s;
@@ -197,7 +208,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
             transition: 0.3s;
         }
 
@@ -208,7 +219,7 @@
 
         .nav-links a:hover,
         .nav-links a.active {
-            color: #8b5cf6;
+            color: var(--gradient-start);
         }
 
         /* Hero Section */
@@ -220,6 +231,7 @@
             max-width: 1400px;
             margin: 0 auto;
             position: relative;
+            z-index: 2;
         }
 
         .hero-content {
@@ -232,7 +244,7 @@
             background: rgba(139, 92, 246, 0.1);
             border-radius: 2rem;
             font-size: 0.8rem;
-            color: #8b5cf6;
+            color: var(--gradient-start);
             margin-bottom: 1.5rem;
         }
 
@@ -241,11 +253,10 @@
             font-weight: 700;
             line-height: 1.1;
             margin-bottom: 1.5rem;
-            color: #0a0a0f;
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -253,13 +264,13 @@
 
         .typed-text {
             font-size: 1.3rem;
-            color: #8b5cf6;
+            color: var(--gradient-start);
             margin-bottom: 1.5rem;
             font-family: 'JetBrains Mono', monospace;
         }
 
         .hero-desc {
-            color: #64748b;
+            color: var(--text-secondary);
             max-width: 550px;
             margin-bottom: 2rem;
             line-height: 1.6;
@@ -273,7 +284,7 @@
 
         .btn-primary {
             padding: 0.8rem 2rem;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             border: none;
             border-radius: 2rem;
             color: white;
@@ -294,9 +305,9 @@
         .btn-outline {
             padding: 0.8rem 2rem;
             background: transparent;
-            border: 1.5px solid #8b5cf6;
+            border: 1.5px solid var(--gradient-start);
             border-radius: 2rem;
-            color: #475569;
+            color: var(--text-secondary);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -319,7 +330,8 @@
         }
 
         .code-card {
-            background: #1e1e2e;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 1rem;
             padding: 1.5rem;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -351,13 +363,14 @@
 
         .code-body .purple { color: #c792ea; }
         .code-body .blue { color: #82aaff; }
-        .code-body .orange { color: #ffcb6b; }
 
-        /* Section Styles */
+        /* Sections */
         section {
             padding: 5rem 5%;
             max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
         .section-title {
@@ -366,7 +379,6 @@
             text-align: center;
             margin-bottom: 3rem;
             position: relative;
-            color: #0a0a0f;
         }
 
         .section-title::after {
@@ -377,7 +389,7 @@
             transform: translateX(-50%);
             width: 80px;
             height: 3px;
-            background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
             border-radius: 3px;
         }
 
@@ -389,32 +401,24 @@
         }
 
         .skill-card {
-            background: white;
-            border: 1px solid #e2e8f0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 1rem;
             padding: 1.5rem;
             text-align: center;
             transition: all 0.3s;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
         }
 
         .skill-card:hover {
             transform: translateY(-5px);
-            border-color: #8b5cf6;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border-color: var(--gradient-start);
         }
 
         .skill-card i {
             font-size: 2.5rem;
-            color: #8b5cf6;
+            color: var(--gradient-start);
             margin-bottom: 0.8rem;
-        }
-
-        .skill-card h4 {
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-            color: #0a0a0f;
         }
 
         /* Services Grid */
@@ -425,31 +429,28 @@
         }
 
         .service-card {
-            background: white;
-            border: 1px solid #e2e8f0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 1.5rem;
             padding: 2rem;
             transition: all 0.3s;
             position: relative;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
         }
 
         .service-card:hover {
             transform: translateY(-5px);
-            border-color: #8b5cf6;
-            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.05);
+            border-color: var(--gradient-start);
         }
 
         .service-card.featured {
-            border: 2px solid #8b5cf6;
-            transform: scale(1.02);
+            border: 2px solid var(--gradient-start);
         }
 
         .popular-badge {
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             padding: 0.3rem 0.8rem;
             border-radius: 2rem;
             font-size: 0.7rem;
@@ -470,26 +471,14 @@
 
         .service-icon i {
             font-size: 1.8rem;
-            color: #8b5cf6;
-        }
-
-        .service-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            color: #0a0a0f;
+            color: var(--gradient-start);
         }
 
         .price {
             font-size: 1.8rem;
             font-weight: 800;
-            color: #8b5cf6;
+            color: var(--gradient-start);
             margin: 1rem 0;
-        }
-
-        .price small {
-            font-size: 0.8rem;
-            font-weight: normal;
-            color: #64748b;
         }
 
         .service-features {
@@ -506,13 +495,12 @@
 
         .service-features i {
             color: #10b981;
-            font-size: 0.8rem;
         }
 
         .service-btn {
             width: 100%;
             padding: 0.8rem;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             border: none;
             border-radius: 2rem;
             color: white;
@@ -534,23 +522,21 @@
         }
 
         .project-card {
-            background: white;
-            border: 1px solid #e2e8f0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 1.5rem;
             overflow: hidden;
             transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
         }
 
         .project-card:hover {
             transform: translateY(-5px);
-            border-color: #8b5cf6;
-            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.05);
+            border-color: var(--gradient-start);
         }
 
         .project-image {
             height: 200px;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -565,29 +551,18 @@
             padding: 1.5rem;
         }
 
-        .project-info h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: #0a0a0f;
-        }
-
-        .project-info p {
-            color: #64748b;
-            margin-bottom: 1rem;
-        }
-
         .project-tech {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
+            margin-top: 1rem;
         }
 
         .tech-tag {
-            background: #f1f5f9;
+            background: rgba(139, 92, 246, 0.1);
             padding: 0.2rem 0.6rem;
             border-radius: 2rem;
             font-size: 0.7rem;
-            color: #475569;
         }
 
         /* Contact Section */
@@ -598,8 +573,8 @@
         }
 
         .contact-info {
-            background: white;
-            border: 1px solid #e2e8f0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 1.5rem;
             padding: 2rem;
         }
@@ -623,12 +598,12 @@
 
         .contact-icon i {
             font-size: 1.2rem;
-            color: #8b5cf6;
+            color: var(--gradient-start);
         }
 
         .contact-form {
-            background: white;
-            border: 1px solid #e2e8f0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 1.5rem;
             padding: 2rem;
         }
@@ -641,24 +616,25 @@
         .form-group textarea {
             width: 100%;
             padding: 0.8rem;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             border-radius: 0.8rem;
             font-family: inherit;
+            color: var(--text-primary);
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #8b5cf6;
+            border-color: var(--gradient-start);
         }
 
         /* Footer */
         .footer {
             text-align: center;
             padding: 2rem;
-            border-top: 1px solid #e2e8f0;
-            color: #64748b;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
         }
 
         /* Responsive */
@@ -686,25 +662,25 @@
 </head>
 <body>
 
-    <!-- Loading Screen -->
-    <div class="loader" id="loader">
-        <div class="loader-content">
-            <div class="loader-circle"></div>
-            <div class="loader-text">Loading portfolio...</div>
-        </div>
+    <!-- Animated Robotic Background -->
+    <div class="robot-bg">
+        <canvas id="robotCanvas" class="robot-canvas"></canvas>
     </div>
 
-    <div class="bg-gradient"></div>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
+    <div class="loader" id="loader">
+        <div class="loader-circle"></div>
+    </div>
 
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
 
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">CYBER<span style="color:#8b5cf6;">RONIN</span>X1</div>
+            <div class="logo">CYBER<span style="color:var(--gradient-start);">RONIN</span>X1</div>
             <div class="nav-links">
                 <a href="#home" class="active">Home</a>
                 <a href="#skills">Skills</a>
@@ -738,9 +714,9 @@
                 </div>
                 <div class="code-body">
                     <span class="purple">const</span> developer = {<br>
-                    &nbsp;&nbsp;name: <span class="orange">'CyberRoninX1'</span>,<br>
-                    &nbsp;&nbsp;stack: [<span class="blue">'PHP'</span>, <span class="blue">'Node.js'</span>, <span class="blue">'MongoDB'</span>],<br>
-                    &nbsp;&nbsp;passion: <span class="orange">'Web Development'</span><br>
+                    &nbsp;&nbsp;name: <span class="blue">'CyberRoninX1'</span>,<br>
+                    &nbsp;&nbsp;stack: [<span class="blue">'PHP'</span>, <span class="blue">'JS'</span>, <span class="blue">'Node.js'</span>],<br>
+                    &nbsp;&nbsp;passion: <span class="blue">'Web Dev'</span><br>
                     };<br>
                     <span class="purple">developer</span>.<span class="blue">build()</span>;
                 </div>
@@ -757,10 +733,8 @@
             <div class="skill-card"><i class="fab fa-js"></i><h4>JavaScript</h4></div>
             <div class="skill-card"><i class="fab fa-php"></i><h4>PHP</h4></div>
             <div class="skill-card"><i class="fas fa-database"></i><h4>MySQL</h4></div>
-            <div class="skill-card"><i class="fab fa-github"></i><h4>GitHub</h4></div>
-            <div class="skill-card"><i class="fas fa-database"></i><h4>MongoDB</h4></div>
             <div class="skill-card"><i class="fab fa-node-js"></i><h4>Node.js</h4></div>
-            <div class="skill-card"><i class="fab fa-whatsapp"></i><h4>Baileys</h4></div>
+            <div class="skill-card"><i class="fab fa-github"></i><h4>GitHub</h4></div>
         </div>
     </section>
 
@@ -776,7 +750,6 @@
                     <li><i class="fas fa-check"></i> 3-5 Page Website</li>
                     <li><i class="fas fa-check"></i> Mobile Responsive</li>
                     <li><i class="fas fa-check"></i> Contact Form</li>
-                    <li><i class="fas fa-check"></i> Social Media Integration</li>
                     <li><i class="fas fa-check"></i> 1 Month Support</li>
                 </ul>
                 <button class="service-btn" onclick="orderPackage('Startup Launch')">Get Started →</button>
@@ -790,7 +763,6 @@
                 <ul class="service-features">
                     <li><i class="fas fa-check"></i> 5-10 Page Website</li>
                     <li><i class="fas fa-check"></i> E-commerce Ready</li>
-                    <li><i class="fas fa-check"></i> WhatsApp Integration</li>
                     <li><i class="fas fa-check"></i> Payment Gateway</li>
                     <li><i class="fas fa-check"></i> 3 Months Support</li>
                 </ul>
@@ -805,7 +777,6 @@
                     <li><i class="fas fa-check"></i> 15+ Page Website</li>
                     <li><i class="fas fa-check"></i> Full E-commerce Suite</li>
                     <li><i class="fas fa-check"></i> Admin Dashboard</li>
-                    <li><i class="fas fa-check"></i> Custom Features</li>
                     <li><i class="fas fa-check"></i> 12 Months Support</li>
                 </ul>
                 <button class="service-btn" onclick="orderPackage('Enterprise Elite')">Get Started →</button>
@@ -821,23 +792,11 @@
                 <div class="project-image"><i class="fas fa-store"></i></div>
                 <div class="project-info">
                     <h3>Mahawilacchiya E-Shop</h3>
-                    <p>Complete e-commerce platform with WhatsApp integration, real-time order tracking, and delivery management.</p>
+                    <p>Complete e-commerce platform with order tracking and delivery management.</p>
                     <div class="project-tech">
                         <span class="tech-tag">PHP</span>
                         <span class="tech-tag">MySQL</span>
-                        <span class="tech-tag">WhatsApp API</span>
-                    </div>
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-image"><i class="fab fa-whatsapp"></i></div>
-                <div class="project-info">
-                    <h3>WhatsApp Bot Suite</h3>
-                    <p>Multi-session WhatsApp bot for automated notifications, OTP verification, and admin commands.</p>
-                    <div class="project-tech">
-                        <span class="tech-tag">Node.js</span>
-                        <span class="tech-tag">Baileys</span>
-                        <span class="tech-tag">Express</span>
+                        <span class="tech-tag">JS</span>
                     </div>
                 </div>
             </div>
@@ -845,11 +804,23 @@
                 <div class="project-image"><i class="fas fa-chart-line"></i></div>
                 <div class="project-info">
                     <h3>Admin Dashboard</h3>
-                    <p>Real-time analytics dashboard with seller management, payment verification, and reporting.</p>
+                    <p>Real-time analytics dashboard with seller management and reporting.</p>
                     <div class="project-tech">
                         <span class="tech-tag">PHP</span>
                         <span class="tech-tag">Chart.js</span>
                         <span class="tech-tag">AJAX</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-image"><i class="fas fa-tasks"></i></div>
+                <div class="project-info">
+                    <h3>Task Manager</h3>
+                    <p>Full-featured task management system with real-time updates.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">Express</span>
+                        <span class="tech-tag">MongoDB</span>
                     </div>
                 </div>
             </div>
@@ -895,18 +866,89 @@
         <p>&copy; 2025 CyberRoninX1 | Code. Create. Innovate.</p>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script>
-        // Hide loader after page load
+        // Animated Robot Background with Canvas
+        const canvas = document.getElementById('robotCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        let particles = [];
+        const particleCount = 80;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.color = `rgba(139, 92, 246, ${Math.random() * 0.3 + 0.1})`;
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateBackground() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw connecting lines
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(139, 92, 246, ${0.1 * (1 - distance / 100)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            requestAnimationFrame(animateBackground);
+        }
+        
+        animateBackground();
+
+        // Loading Screen
         window.addEventListener('load', () => {
-            const loader = document.getElementById('loader');
             setTimeout(() => {
+                const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 500);
-            }, 1000);
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 800);
         });
 
         // Custom Cursor
@@ -920,20 +962,9 @@
             cursorFollower.style.top = e.clientY + 'px';
         });
 
-        document.addEventListener('mousedown', () => {
-            cursor.style.transform = 'translate(-50%, -50%) scale(0.8)';
-            cursorFollower.style.transform = 'translate(-50%, -50%) scale(1.3)';
-        });
-
-        document.addEventListener('mouseup', () => {
-            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-            cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
-        });
-
         // GSAP Animations
         gsap.registerPlugin(ScrollTrigger);
 
-        // Hero Animation
         gsap.from('.hero-content', {
             duration: 1,
             y: 50,
@@ -949,7 +980,6 @@
             delay: 0.3
         });
 
-        // Section Animations
         gsap.utils.toArray('.skill-card, .service-card, .project-card').forEach((card, i) => {
             gsap.from(card, {
                 scrollTrigger: {
@@ -964,42 +994,9 @@
             });
         });
 
-        // Navbar Active on Scroll
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('.nav-links a');
-
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 200;
-                if (scrollY >= sectionTop) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
-        // Order Package Function
-        function orderPackage(packageName) {
-            window.location.href = `https://wa.me/94712345678?text=Hi! I'm interested in the ${packageName} package. Can you tell me more?`;
-        }
-
-        // Form Submission
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Thank you for your message! I will get back to you within 24 hours.');
-            this.reset();
-        });
-
         // Typed Text Animation
         const typedElement = document.querySelector('.typed-text');
-        const texts = ['PHP & MySQL Developer', 'Node.js Expert', 'Full Stack Developer', 'WhatsApp Bot Specialist'];
+        const texts = ['PHP & MySQL Developer', 'Node.js Expert', 'Full Stack Developer', 'Web Application Specialist'];
         let textIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
@@ -1027,6 +1024,55 @@
         }
 
         typeEffect();
+
+        // Dark/Light Mode
+        const themeToggle = document.getElementById('themeToggle');
+        let isDark = localStorage.getItem('theme') === 'dark';
+
+        function setTheme(dark) {
+            if (dark) {
+                document.body.classList.add('dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        if (localStorage.getItem('theme') === 'dark') setTheme(true);
+
+        themeToggle.addEventListener('click', () => {
+            setTheme(!document.body.classList.contains('dark'));
+        });
+
+        // Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! I will get back to you within 24 hours.');
+            this.reset();
+        });
+
+        // Navbar Active
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-links a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 200;
+                if (scrollY >= sectionTop) current = section.getAttribute('id');
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+            });
+        });
+
+        function orderPackage(packageName) {
+            window.location.href = `https://wa.me/94712345678?text=Hi! I'm interested in the ${packageName} package.`;
+        }
     </script>
 </body>
 </html>
