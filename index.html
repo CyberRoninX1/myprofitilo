@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>CyberRoninX1 | Parallax Portfolio</title>
-    <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- GSAP + ScrollTrigger for parallax magic -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <style>
@@ -19,134 +17,150 @@
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background: #0a0a0f;
-            color: #e2e8f0;
+            background: #050510;
+            color: #ffffff;
             overflow-x: hidden;
         }
 
-        /* ---- Smooth scroll behavior + scrollbar styling ---- */
-        html {
-            scroll-behavior: smooth;
-        }
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1e1e2e;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #8b5cf6;
-            border-radius: 10px;
-        }
-
-        /* ---- PARALLAX CONTAINER (the secret sauce) ---- */
-        .parallax-container {
-            position: relative;
-            width: 100%;
+        /* PARALLAX CONTAINER - This creates the 3D effect */
+        .parallax {
+            perspective: 1px;
+            height: 100vh;
             overflow-x: hidden;
             overflow-y: auto;
-            perspective: 1px;
         }
 
-        /* ---- HERO SECTION – PARALLAX LAYERS ---- */
-        .hero {
+        .parallax__layer {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .parallax__layer--base {
+            transform: translateZ(0);
             position: relative;
-            min-height: 100vh;
+        }
+
+        .parallax__layer--back {
+            transform: translateZ(-1px) scale(2);
+        }
+
+        .parallax__layer--deep {
+            transform: translateZ(-2px) scale(3);
+        }
+
+        /* Hero Section with Parallax */
+        .hero-section {
+            position: relative;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
             overflow: hidden;
-            z-index: 1;
         }
 
-        /* LAYER 1 : background gradient + floating shapes (slowest) */
-        .parallax-bg {
+        /* Floating shapes that move at different speeds */
+        .shape {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 120%;
-            background: radial-gradient(circle at 20% 30%, #1e1a3a, #0a0a0f);
-            transform: translateZ(-1px) scale(2);
-            z-index: -2;
-        }
-
-        /* LAYER 2 : floating glowing orbs (medium speed) */
-        .parallax-orbs {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            transform: translateZ(-0.5px) scale(1.5);
-            z-index: -1;
-        }
-        .orb {
-            position: absolute;
-            border-radius: 50%;
             filter: blur(60px);
+            border-radius: 50%;
             opacity: 0.4;
-            animation: floatOrb 12s infinite alternate ease-in-out;
-        }
-        .orb1 { width: 300px; height: 300px; background: #8b5cf6; top: 10%; left: -5%; animation-duration: 14s; }
-        .orb2 { width: 450px; height: 450px; background: #3b82f6; bottom: 0%; right: -10%; animation-duration: 18s; }
-        .orb3 { width: 200px; height: 200px; background: #ec4899; top: 40%; right: 20%; animation-duration: 10s; }
-
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, -40px) scale(1.1); }
         }
 
-        /* LAYER 3 : main content (normal speed, foreground) */
+        .shape-1 {
+            width: 400px;
+            height: 400px;
+            background: #8b5cf6;
+            top: 20%;
+            left: -10%;
+            animation: float1 8s ease-in-out infinite;
+        }
+
+        .shape-2 {
+            width: 500px;
+            height: 500px;
+            background: #3b82f6;
+            bottom: 10%;
+            right: -15%;
+            animation: float2 10s ease-in-out infinite;
+        }
+
+        .shape-3 {
+            width: 250px;
+            height: 250px;
+            background: #ec4899;
+            top: 60%;
+            left: 20%;
+            animation: float3 6s ease-in-out infinite;
+        }
+
+        .shape-4 {
+            width: 300px;
+            height: 300px;
+            background: #06b6d4;
+            top: 40%;
+            right: 25%;
+            animation: float1 7s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(50px, -50px); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-40px, 60px); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 40px); }
+        }
+
         .hero-content {
+            text-align: center;
+            z-index: 10;
             position: relative;
-            z-index: 2;
             max-width: 900px;
-            margin: 0 auto;
-            padding: 2rem;
-            transform: translateZ(0);
-            animation: fadeInUp 1s ease-out;
+            padding: 0 2rem;
         }
 
         .hero-badge {
             display: inline-block;
-            background: rgba(139, 92, 246, 0.15);
-            backdrop-filter: blur(4px);
-            padding: 0.4rem 1.2rem;
-            border-radius: 40px;
+            background: rgba(139, 92, 246, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
             font-size: 0.8rem;
-            font-weight: 500;
-            letter-spacing: 1px;
-            color: #c084fc;
+            border: 1px solid rgba(139, 92, 246, 0.4);
             margin-bottom: 1.5rem;
-            border: 1px solid rgba(139,92,246,0.3);
         }
 
-        .hero h1 {
+        .hero-content h1 {
             font-size: clamp(2.5rem, 7vw, 5rem);
             font-weight: 800;
-            line-height: 1.1;
+            margin-bottom: 1rem;
             background: linear-gradient(135deg, #ffffff, #a855f7, #3b82f6);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+        }
+
+        .typed-container {
+            height: 4rem;
             margin-bottom: 1rem;
         }
 
-        .typed-wrapper {
-            height: 70px;
-            margin-bottom: 1rem;
-        }
         .typed-text {
-            font-size: 1.2rem;
             font-family: 'JetBrains Mono', monospace;
-            color: #8b5cf6;
-            letter-spacing: 1px;
+            font-size: 1.2rem;
+            color: #a855f7;
         }
 
-        .hero p {
-            font-size: 1rem;
+        .hero-content p {
             color: #cbd5e1;
             max-width: 550px;
             margin: 1rem auto;
@@ -157,485 +171,522 @@
             display: flex;
             gap: 1rem;
             justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
+            margin-top: 2rem;
         }
+
         .btn-primary, .btn-outline {
             padding: 0.8rem 2rem;
-            border-radius: 40px;
+            border-radius: 2rem;
             font-weight: 600;
-            transition: 0.3s;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            transition: all 0.3s;
         }
+
         .btn-primary {
-            background: linear-gradient(95deg, #8b5cf6, #3b82f6);
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
             color: white;
-            box-shadow: 0 4px 15px rgba(139,92,246,0.3);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
         }
+
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(139,92,246,0.4);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
         }
+
         .btn-outline {
             border: 1.5px solid #8b5cf6;
-            color: #e2e8f0;
+            color: white;
             background: transparent;
         }
+
         .btn-outline:hover {
-            background: rgba(139,92,246,0.1);
+            background: rgba(139, 92, 246, 0.1);
             transform: translateY(-3px);
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ---- COMMON SECTIONS (cards, reveal animations) ---- */
+        /* Regular Sections */
         section {
             padding: 5rem 5%;
             max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 5;
         }
+
         .section-title {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
             text-align: center;
             margin-bottom: 3rem;
             position: relative;
         }
-        .section-title:after {
+
+        .section-title::after {
             content: '';
             position: absolute;
             bottom: -12px;
             left: 50%;
             transform: translateX(-50%);
-            width: 70px;
+            width: 80px;
             height: 3px;
             background: linear-gradient(90deg, #8b5cf6, #3b82f6);
             border-radius: 3px;
         }
 
-        /* Skills grid */
+        /* Skills Grid */
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1.5rem;
         }
+
         .skill-card {
-            background: rgba(30, 30, 46, 0.6);
-            backdrop-filter: blur(8px);
-            border: 1px solid #2d2d44;
+            background: rgba(30, 30, 50, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
             border-radius: 1rem;
-            padding: 1.2rem;
+            padding: 1.5rem;
             text-align: center;
             transition: all 0.3s;
         }
-        .skill-card i {
-            font-size: 2rem;
-            color: #8b5cf6;
-            margin-bottom: 0.5rem;
-        }
+
         .skill-card:hover {
             transform: translateY(-8px);
             border-color: #8b5cf6;
-            background: rgba(139,92,246,0.1);
+            background: rgba(139, 92, 246, 0.1);
         }
 
-        /* Services & Projects Cards */
-        .services-grid, .projects-grid {
+        .skill-card i {
+            font-size: 2.5rem;
+            color: #8b5cf6;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Services Grid */
+        .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
         }
-        .service-card, .project-card {
-            background: rgba(20, 20, 30, 0.7);
+
+        .service-card {
+            background: rgba(30, 30, 50, 0.6);
             backdrop-filter: blur(10px);
-            border: 1px solid #2d2d44;
+            border: 1px solid rgba(139, 92, 246, 0.2);
             border-radius: 1.5rem;
             padding: 2rem;
             transition: all 0.3s;
+            position: relative;
         }
-        .service-card:hover, .project-card:hover {
+
+        .service-card:hover {
             transform: translateY(-8px);
             border-color: #8b5cf6;
-            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.3);
         }
+
+        .service-card.featured {
+            border: 2px solid #8b5cf6;
+            transform: scale(1.02);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
         .service-icon {
             width: 60px;
             height: 60px;
-            background: rgba(139,92,246,0.15);
+            background: rgba(139, 92, 246, 0.15);
             border-radius: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 1rem;
         }
+
         .service-icon i {
             font-size: 1.8rem;
-            color: #a855f7;
+            color: #8b5cf6;
         }
+
         .price {
             font-size: 1.8rem;
             font-weight: 800;
-            color: #c084fc;
+            color: #8b5cf6;
             margin: 1rem 0;
         }
+
         .service-features {
             list-style: none;
             margin: 1rem 0;
         }
+
         .service-features li {
-            padding: 0.4rem 0;
+            padding: 0.5rem 0;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
+
         .service-features i {
             color: #10b981;
-            font-size: 0.8rem;
         }
+
         .service-btn {
             width: 100%;
-            padding: 0.7rem;
-            background: linear-gradient(95deg, #8b5cf6, #3b82f6);
+            padding: 0.8rem;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
             border: none;
             border-radius: 2rem;
             color: white;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.3s;
         }
+
         .service-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(139,92,246,0.4);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
         }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: rgba(30, 30, 50, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: #8b5cf6;
+        }
+
+        .project-image {
+            height: 180px;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .project-image i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        .project-info {
+            padding: 1.5rem;
+        }
+
         .project-tech {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
             margin-top: 1rem;
         }
+
         .tech-tag {
-            background: rgba(139,92,246,0.2);
+            background: rgba(139, 92, 246, 0.2);
             padding: 0.2rem 0.6rem;
             border-radius: 2rem;
             font-size: 0.7rem;
         }
 
-        /* Contact section */
+        /* Contact Section */
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 3rem;
         }
+
         .contact-info, .contact-form {
-            background: rgba(20,20,30,0.7);
+            background: rgba(30, 30, 50, 0.6);
             backdrop-filter: blur(10px);
-            border: 1px solid #2d2d44;
+            border: 1px solid rgba(139, 92, 246, 0.2);
             border-radius: 1.5rem;
             padding: 2rem;
         }
+
         .contact-item {
             display: flex;
             align-items: center;
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
+
         .contact-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(139,92,246,0.15);
+            width: 50px;
+            height: 50px;
+            background: rgba(139, 92, 246, 0.15);
             border-radius: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .form-group input, .form-group textarea {
+
+        .contact-icon i {
+            font-size: 1.2rem;
+            color: #8b5cf6;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 0.8rem;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid #3f3f55;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.2);
             border-radius: 0.8rem;
             color: white;
             font-family: inherit;
         }
-        .form-group input:focus, .form-group textarea:focus {
+
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: #8b5cf6;
         }
+
         .footer {
             text-align: center;
             padding: 2rem;
-            border-top: 1px solid #2d2d44;
-            font-size: 0.8rem;
-            opacity: 0.7;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            margin-top: 3rem;
         }
 
         @media (max-width: 768px) {
             .contact-grid {
                 grid-template-columns: 1fr;
             }
-            .hero h1 {
-                font-size: 2rem;
+            .services-grid {
+                grid-template-columns: 1fr;
             }
-            .typed-wrapper {
-                height: 50px;
+            .projects-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="parallax-container">
-        <!-- HERO WITH PARALLAX LAYERS (exactly like Figma tutorial) -->
-        <section class="hero">
-            <div class="parallax-bg"></div>
-            <div class="parallax-orbs">
-                <div class="orb orb1"></div>
-                <div class="orb orb2"></div>
-                <div class="orb orb3"></div>
-            </div>
-            <div class="hero-content">
-                <div class="hero-badge">✦ FULL STACK ARCHITECT ✦</div>
-                <h1>CyberRonin<span style="background: none; -webkit-background-clip: unset; color:#c084fc;">X1</span></h1>
-                <div class="typed-wrapper">
-                    <div class="typed-text"></div>
-                </div>
-                <p>Crafting high‑performance web applications with PHP, Node.js, and modern front‑end magic. Let's build something extraordinary.</p>
-                <div class="btn-group">
-                    <a href="#contact" class="btn-primary"><i class="fas fa-paper-plane"></i> Hire Me</a>
-                    <a href="https://github.com/CyberRoninX1" target="_blank" class="btn-outline"><i class="fab fa-github"></i> GitHub</a>
-                </div>
-            </div>
-        </section>
 
-        <!-- Skills / Tech stack -->
-        <section>
-            <h2 class="section-title">▸ tech arsenal ◂</h2>
-            <div class="skills-grid">
-                <div class="skill-card"><i class="fab fa-html5"></i><h4>HTML5</h4></div>
-                <div class="skill-card"><i class="fab fa-css3-alt"></i><h4>CSS3</h4></div>
-                <div class="skill-card"><i class="fab fa-js"></i><h4>JavaScript</h4></div>
-                <div class="skill-card"><i class="fab fa-php"></i><h4>PHP</h4></div>
-                <div class="skill-card"><i class="fas fa-database"></i><h4>MySQL</h4></div>
-                <div class="skill-card"><i class="fab fa-node-js"></i><h4>Node.js</h4></div>
-                <div class="skill-card"><i class="fab fa-github"></i><h4>GitHub</h4></div>
-                <div class="skill-card"><i class="fab fa-react"></i><h4>React</h4></div>
+    <!-- Hero Section with TRUE PARALLAX -->
+    <div class="hero-section">
+        <!-- Parallax Layers - Different speeds! -->
+        <div class="parallax__layer--deep">
+            <div class="shape shape-1"></div>
+        </div>
+        <div class="parallax__layer--back">
+            <div class="shape shape-2"></div>
+            <div class="shape shape-4"></div>
+        </div>
+        <div class="parallax__layer--base">
+            <div class="shape shape-3"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-code"></i> FULL STACK DEVELOPER
             </div>
-        </section>
-
-        <!-- Service packages -->
-        <section>
-            <h2 class="section-title">▸ service packages ◂</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon"><i class="fas fa-rocket"></i></div>
-                    <h3>Startup Launch</h3>
-                    <div class="price">Rs. 15,000</div>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> 3-5 Page Website</li>
-                        <li><i class="fas fa-check"></i> Mobile Responsive</li>
-                        <li><i class="fas fa-check"></i> Contact Form</li>
-                        <li><i class="fas fa-check"></i> 1 Month Support</li>
-                    </ul>
-                    <button class="service-btn" onclick="orderPackage('Startup Launch')">Get Started →</button>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon"><i class="fas fa-chart-line"></i></div>
-                    <h3>Business Pro</h3>
-                    <div class="price">Rs. 35,000</div>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> 5-10 Page Website</li>
-                        <li><i class="fas fa-check"></i> E‑commerce Ready</li>
-                        <li><i class="fas fa-check"></i> Payment Gateway</li>
-                        <li><i class="fas fa-check"></i> 3 Months Support</li>
-                    </ul>
-                    <button class="service-btn" onclick="orderPackage('Business Pro')">Get Started →</button>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon"><i class="fas fa-crown"></i></div>
-                    <h3>Enterprise Elite</h3>
-                    <div class="price">Rs. 75,000</div>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> 15+ Page Website</li>
-                        <li><i class="fas fa-check"></i> Full E‑commerce Suite</li>
-                        <li><i class="fas fa-check"></i> Admin Dashboard</li>
-                        <li><i class="fas fa-check"></i> 12 Months Support</li>
-                    </ul>
-                    <button class="service-btn" onclick="orderPackage('Enterprise Elite')">Get Started →</button>
-                </div>
+            <h1>CyberRonin<span style="color:#8b5cf6;">X1</span></h1>
+            <div class="typed-container">
+                <div class="typed-text"></div>
             </div>
-        </section>
-
-        <!-- Featured projects -->
-        <section>
-            <h2 class="section-title">▸ recent builds ◂</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div style="display:flex; justify-content:center; margin-bottom:1rem;"><i class="fas fa-store" style="font-size: 2.5rem; color:#a855f7;"></i></div>
-                    <h3>Mahawilacchiya E‑Shop</h3>
-                    <p>Complete e‑commerce platform with order tracking and delivery management.</p>
-                    <div class="project-tech"><span class="tech-tag">PHP</span><span class="tech-tag">MySQL</span><span class="tech-tag">JS</span></div>
-                </div>
-                <div class="project-card">
-                    <div style="display:flex; justify-content:center; margin-bottom:1rem;"><i class="fas fa-chart-line" style="font-size: 2.5rem; color:#a855f7;"></i></div>
-                    <h3>Admin Dashboard</h3>
-                    <p>Real‑time analytics dashboard with seller management & reporting.</p>
-                    <div class="project-tech"><span class="tech-tag">PHP</span><span class="tech-tag">Chart.js</span><span class="tech-tag">AJAX</span></div>
-                </div>
-                <div class="project-card">
-                    <div style="display:flex; justify-content:center; margin-bottom:1rem;"><i class="fas fa-tasks" style="font-size: 2.5rem; color:#a855f7;"></i></div>
-                    <h3>Task Manager</h3>
-                    <p>Feature‑rich task management system with real‑time updates.</p>
-                    <div class="project-tech"><span class="tech-tag">Node.js</span><span class="tech-tag">Express</span><span class="tech-tag">MongoDB</span></div>
-                </div>
+            <p>Building high-performance web applications with PHP, Node.js, and modern front-end technologies.</p>
+            <div class="btn-group">
+                <a href="#contact" class="btn-primary"><i class="fas fa-paper-plane"></i> Hire Me</a>
+                <a href="https://github.com/CyberRoninX1" target="_blank" class="btn-outline"><i class="fab fa-github"></i> GitHub</a>
             </div>
-        </section>
-
-        <!-- Contact & footer -->
-        <section id="contact">
-            <h2 class="section-title">▸ connect ◂</h2>
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <div class="contact-item"><div class="contact-icon"><i class="fab fa-whatsapp"></i></div><div><strong>WhatsApp</strong><br>+94 71 234 5678</div></div>
-                    <div class="contact-item"><div class="contact-icon"><i class="fas fa-envelope"></i></div><div><strong>Email</strong><br>cyberronin@proton.me</div></div>
-                    <div class="contact-item"><div class="contact-icon"><i class="fab fa-github"></i></div><div><strong>GitHub</strong><br>/CyberRoninX1</div></div>
-                </div>
-                <div class="contact-form">
-                    <form id="contactForm">
-                        <div class="form-group"><input type="text" placeholder="Your Name" required></div>
-                        <div class="form-group"><input type="email" placeholder="Your Email" required></div>
-                        <div class="form-group"><textarea rows="4" placeholder="Your Message" required></textarea></div>
-                        <button type="submit" class="service-btn" style="width:100%">Send Message →</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-        <footer class="footer">
-            <p>© 2025 CyberRoninX1 — parallax aesthetics • full‑stack alchemy</p>
-        </footer>
+        </div>
     </div>
 
+               <div class="skill-card"><i class="fab fa-node-js"></i><h4>Node.js</h4></div>
+            <div class="skill-card"><i class="fab fa-react"></i><h4>React</h4></div>
+            <div class="skill-card"><i class="fab fa-git-alt"></i><h4>Git</h4></div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section>
+        <h2 class="section-title">💼 Services</h2>
+        <div class="services-grid">
+
+            <div class="service-card featured">
+                <div class="popular-badge">POPULAR</div>
+                <div class="service-icon"><i class="fas fa-code"></i></div>
+                <h3>Full Stack Development</h3>
+                <p>Complete web app development from frontend to backend.</p>
+                <div class="price">$300+</div>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Responsive UI</li>
+                    <li><i class="fas fa-check"></i> API Integration</li>
+                    <li><i class="fas fa-check"></i> Database Setup</li>
+                </ul>
+                <button class="service-btn">Get Started</button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-paint-brush"></i></div>
+                <h3>Frontend Design</h3>
+                <p>Modern, animated, and clean UI/UX design.</p>
+                <div class="price">$120+</div>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Responsive</li>
+                    <li><i class="fas fa-check"></i> Animations</li>
+                    <li><i class="fas fa-check"></i> Clean Code</li>
+                </ul>
+                <button class="service-btn">Get Started</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section>
+        <h2 class="section-title">🚀 Projects</h2>
+        <div class="projects-grid">
+
+            <div class="project-card">
+                <div class="project-image"><i class="fas fa-globe"></i></div>
+                <div class="project-info">
+                    <h3>Portfolio Website</h3>
+                    <p>Personal animated portfolio with parallax effects.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">HTML</span>
+                        <span class="tech-tag">CSS</span>
+                        <span class="tech-tag">JS</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image"><i class="fas fa-database"></i></div>
+                <div class="project-info">
+                    <h3>Admin Dashboard</h3>
+                    <p>Full stack dashboard with authentication.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">PHP</span>
+                        <span class="tech-tag">MySQL</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <h2 class="section-title">📩 Contact Me</h2>
+        <div class="contact-grid">
+
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <div>Email: cyberronin@example.com</div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fab fa-github"></i></div>
+                    <div>GitHub: CyberRoninX1</div>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <div class="form-group">
+                    <input type="text" placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Your Email">
+                </div>
+                <div class="form-group">
+                    <textarea rows="4" placeholder="Message"></textarea>
+                </div>
+                <button class="service-btn">Send Message</button>
+            </div>
+
+        </div>
+    </section>
+
+    <div class="footer">
+        © 2026 CyberRoninX1 — Built with ⚡
+    </div>
+
+    <!-- JS Animations -->
     <script>
-        // ---------- GSAP + SCROLLTRIGGER for parallax (like Figma video) ----------
-        gsap.registerPlugin(ScrollTrigger, TextPlugin);
+        // GSAP Scroll Animations
+        gsap.registerPlugin(ScrollTrigger);
 
-        // 1. PARALLAX : move .orb1 / .orb2 at different speeds while scrolling
-        gsap.to(".orb1", {
-            y: 200,
-            x: 80,
-            scale: 1.2,
-            scrollTrigger: {
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1.5,
-            }
-        });
-        gsap.to(".orb2", {
-            y: -150,
-            x: -100,
-            scale: 0.9,
-            scrollTrigger: {
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1.2,
-            }
-        });
-        gsap.to(".orb3", {
-            y: 100,
-            x: 60,
-            scale: 1.3,
-            scrollTrigger: {
-                trigger: "body",
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1,
-            }
-        });
-
-        // 2. Cards reveal with staggered fade-up + parallax depth
-        const cards = document.querySelectorAll('.skill-card, .service-card, .project-card');
-        cards.forEach((card, idx) => {
-            gsap.from(card, {
-                scrollTrigger: {
-                    trigger: card,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse",
-                },
-                y: 60,
+        gsap.utils.toArray("section").forEach(section => {
+            gsap.from(section, {
                 opacity: 0,
-                duration: 0.7,
-                delay: idx * 0.05,
-                ease: "power2.out"
+                y: 80,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 80%",
+                }
             });
         });
 
-        // 3. Section titles slide-in from left/right
-        gsap.utils.toArray('.section-title').forEach(title => {
-            gsap.from(title, {
-                scrollTrigger: {
-                    trigger: title,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse",
-                },
-                x: -50,
-                opacity: 0,
-                duration: 0.8,
-                ease: "back.out(0.6)"
+        // Parallax movement (mouse effect)
+        document.addEventListener("mousemove", (e) => {
+            const x = (window.innerWidth - e.pageX * 2) / 100;
+            const y = (window.innerHeight - e.pageY * 2) / 100;
+
+            document.querySelectorAll(".shape").forEach((shape) => {
+                shape.style.transform = `translate(${x}px, ${y}px)`;
             });
         });
 
-        // 4. Typed text effect (hero)
-        const words = ["PHP & MySQL Developer", "Node.js Expert", "Full Stack Architect", "Modern Web Alchemist"];
-        let i = 0;
-        let isDeleting = false;
-        let currentIdx = 0;
-        const typedEl = document.querySelector('.typed-text');
+        // Typing Effect
+        const texts = [
+            "Full Stack Developer",
+            "PHP & Node.js Expert",
+            "UI Animation Lover",
+            "Freelancer 🚀"
+        ];
 
-        function typeEffect() {
-            const fullText = words[currentIdx];
-            if (isDeleting) {
-                typedEl.textContent = ">_ " + fullText.substring(0, i-1);
-                i--;
-                if (i === 0) {
-                    isDeleting = false;
-                    currentIdx = (currentIdx + 1) % words.length;
-                    setTimeout(typeEffect, 300);
-                    return;
-                }
-            } else {
-                typedEl.textContent = ">_ " + fullText.substring(0, i+1);
-                i++;
-                if (i === fullText.length) {
-                    isDeleting = true;
-                    setTimeout(typeEffect, 2000);
-                    return;
-                }
+        let count = 0;
+        let index = 0;
+        let currentText = "";
+        let letter = "";
+
+        function type() {
+            if (count === texts.length) count = 0;
+            currentText = texts[count];
+            letter = currentText.slice(0, ++index);
+
+            document.querySelector(".typed-text").textContent = letter;
+
+            if (letter.length === currentText.length) {
+                setTimeout(() => {
+                    index = 0;
+                    count++;
+                }, 1500);
             }
-            setTimeout(typeEffect, isDeleting ? 50 : 100);
-        }
-        typeEffect();
 
-        // 5. Simple contact form handler + package order
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert("✨ Message sent! I'll reach out within 24 hours.");
-            this.reset();
-        });
-
-        function orderPackage(pkg) {
-            window.location.href = `https://wa.me/94712345678?text=Hi! I'm interested in the ${pkg} package.`;
+            setTimeout(type, 80);
         }
 
-        // 6. (bonus) small floating animation for orbs already present in css, but we ensure consistent movement
-        window.addEventListener('load', () => {
-            ScrollTrigger.refresh();
-        });
+        type();
     </script>
+
 </body>
 </html>
