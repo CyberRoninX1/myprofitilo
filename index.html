@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>CyberRoninX1 | Parallax Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <title>CyberRoninX1 | Full Stack Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- GSAP for premium animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -17,214 +19,360 @@
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background: #050510;
-            color: #ffffff;
+            background: #ffffff;
+            color: #0a0a0f;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        /* PARALLAX CONTAINER - This creates the 3D effect */
-        .parallax {
-            perspective: 1px;
-            height: 100vh;
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-
-        .parallax__layer {
-            position: absolute;
+        /* Premium Gradient Background */
+        .bg-gradient {
+            position: fixed;
             top: 0;
-            right: 0;
-            bottom: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+                        linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
         }
 
-        .parallax__layer--base {
-            transform: translateZ(0);
-            position: relative;
-        }
-
-        .parallax__layer--back {
-            transform: translateZ(-1px) scale(2);
-        }
-
-        .parallax__layer--deep {
-            transform: translateZ(-2px) scale(3);
-        }
-
-        /* Hero Section with Parallax */
-        .hero-section {
-            position: relative;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        /* Floating shapes that move at different speeds */
-        .shape {
-            position: absolute;
-            filter: blur(60px);
+        /* Animated Blobs */
+        .blob {
+            position: fixed;
+            width: 600px;
+            height: 600px;
             border-radius: 50%;
-            opacity: 0.4;
+            filter: blur(80px);
+            z-index: -1;
+            animation: floatBlob 20s ease-in-out infinite;
         }
 
-        .shape-1 {
-            width: 400px;
-            height: 400px;
-            background: #8b5cf6;
-            top: 20%;
-            left: -10%;
-            animation: float1 8s ease-in-out infinite;
+        .blob-1 {
+            background: rgba(139, 92, 246, 0.08);
+            top: -200px;
+            right: -200px;
+            animation-delay: 0s;
         }
 
-        .shape-2 {
+        .blob-2 {
+            background: rgba(59, 130, 246, 0.08);
+            bottom: -200px;
+            left: -200px;
             width: 500px;
             height: 500px;
-            background: #3b82f6;
-            bottom: 10%;
-            right: -15%;
-            animation: float2 10s ease-in-out infinite;
+            animation-delay: -5s;
         }
 
-        .shape-3 {
-            width: 250px;
-            height: 250px;
-            background: #ec4899;
-            top: 60%;
-            left: 20%;
-            animation: float3 6s ease-in-out infinite;
+        .blob-3 {
+            background: rgba(236, 72, 153, 0.05);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            animation-delay: -10s;
         }
 
-        .shape-4 {
-            width: 300px;
-            height: 300px;
-            background: #06b6d4;
-            top: 40%;
-            right: 25%;
-            animation: float1 7s ease-in-out infinite;
+        @keyframes floatBlob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
         }
 
-        @keyframes float1 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(50px, -50px); }
+        /* Custom Cursor */
+        .cursor {
+            width: 12px;
+            height: 12px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: 0.05s;
+            transform: translate(-50%, -50%);
         }
 
-        @keyframes float2 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-40px, 60px); }
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: 0.15s;
+            transform: translate(-50%, -50%);
+            backdrop-filter: blur(2px);
         }
 
-        @keyframes float3 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(30px, 40px); }
+        /* Loading Screen */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: 0.5s;
         }
 
-        .hero-content {
+        .loader-content {
             text-align: center;
-            z-index: 10;
-            position: relative;
-            max-width: 900px;
-            padding: 0 2rem;
         }
 
-        .hero-badge {
-            display: inline-block;
-            background: rgba(139, 92, 246, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 0.5rem 1.2rem;
-            border-radius: 2rem;
-            font-size: 0.8rem;
-            border: 1px solid rgba(139, 92, 246, 0.4);
-            margin-bottom: 1.5rem;
+        .loader-circle {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #8b5cf6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
         }
 
-        .hero-content h1 {
-            font-size: clamp(2.5rem, 7vw, 5rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #ffffff, #a855f7, #3b82f6);
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            font-family: 'JetBrains Mono', monospace;
+            color: #8b5cf6;
+            letter-spacing: 2px;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.2rem 5%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
-        .typed-container {
-            height: 4rem;
-            margin-bottom: 1rem;
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover::before,
+        .nav-links a.active::before {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #8b5cf6;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            color: #8b5cf6;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: #0a0a0f;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .typed-text {
+            font-size: 1.3rem;
+            color: #8b5cf6;
+            margin-bottom: 1.5rem;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 1.2rem;
-            color: #a855f7;
         }
 
-        .hero-content p {
-            color: #cbd5e1;
+        .hero-desc {
+            color: #64748b;
             max-width: 550px;
-            margin: 1rem auto;
+            margin-bottom: 2rem;
             line-height: 1.6;
         }
 
         .btn-group {
             display: flex;
             gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-
-        .btn-primary, .btn-outline {
-            padding: 0.8rem 2rem;
-            border-radius: 2rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
+            flex-wrap: wrap;
         }
 
         .btn-primary {
+            padding: 0.8rem 2rem;
             background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            border: none;
+            border-radius: 2rem;
             color: white;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
         }
 
         .btn-outline {
-            border: 1.5px solid #8b5cf6;
-            color: white;
+            padding: 0.8rem 2rem;
             background: transparent;
+            border: 1.5px solid #8b5cf6;
+            border-radius: 2rem;
+            color: #475569;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-outline:hover {
-            background: rgba(139, 92, 246, 0.1);
+            background: rgba(139, 92, 246, 0.05);
             transform: translateY(-3px);
         }
 
-        /* Regular Sections */
+        /* Hero Visual */
+        .hero-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .code-card {
+            background: #1e1e2e;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .code-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot:nth-child(1) { background: #ff5f56; }
+        .code-dot:nth-child(2) { background: #ffbd2e; }
+        .code-dot:nth-child(3) { background: #27c93f; }
+
+        .code-body {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #a5d6ff;
+        }
+
+        .code-body .purple { color: #c792ea; }
+        .code-body .blue { color: #82aaff; }
+        .code-body .orange { color: #ffcb6b; }
+
+        /* Section Styles */
         section {
             padding: 5rem 5%;
             max-width: 1400px;
             margin: 0 auto;
-            position: relative;
-            z-index: 5;
         }
 
         .section-title {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 700;
             text-align: center;
             margin-bottom: 3rem;
             position: relative;
+            color: #0a0a0f;
         }
 
         .section-title::after {
             content: '';
             position: absolute;
-            bottom: -12px;
+            bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
             width: 80px;
@@ -236,30 +384,37 @@
         /* Skills Grid */
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 1.5rem;
         }
 
         .skill-card {
-            background: rgba(30, 30, 50, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 1rem;
             padding: 1.5rem;
             text-align: center;
             transition: all 0.3s;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
         }
 
         .skill-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             border-color: #8b5cf6;
-            background: rgba(139, 92, 246, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         }
 
         .skill-card i {
             font-size: 2.5rem;
             color: #8b5cf6;
             margin-bottom: 0.8rem;
+        }
+
+        .skill-card h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: #0a0a0f;
         }
 
         /* Services Grid */
@@ -270,18 +425,19 @@
         }
 
         .service-card {
-            background: rgba(30, 30, 50, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 1.5rem;
             padding: 2rem;
             transition: all 0.3s;
             position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
         }
 
         .service-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             border-color: #8b5cf6;
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.05);
         }
 
         .service-card.featured {
@@ -298,22 +454,29 @@
             border-radius: 2rem;
             font-size: 0.7rem;
             font-weight: 600;
+            color: white;
         }
 
         .service-icon {
             width: 60px;
             height: 60px;
-            background: rgba(139, 92, 246, 0.15);
+            background: rgba(139, 92, 246, 0.1);
             border-radius: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .service-icon i {
             font-size: 1.8rem;
             color: #8b5cf6;
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #0a0a0f;
         }
 
         .price {
@@ -323,9 +486,15 @@
             margin: 1rem 0;
         }
 
+        .price small {
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: #64748b;
+        }
+
         .service-features {
             list-style: none;
-            margin: 1rem 0;
+            margin: 1.5rem 0;
         }
 
         .service-features li {
@@ -337,6 +506,7 @@
 
         .service-features i {
             color: #10b981;
+            font-size: 0.8rem;
         }
 
         .service-btn {
@@ -364,21 +534,22 @@
         }
 
         .project-card {
-            background: rgba(30, 30, 50, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 1.5rem;
             overflow: hidden;
             transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
         }
 
         .project-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             border-color: #8b5cf6;
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.05);
         }
 
         .project-image {
-            height: 180px;
+            height: 200px;
             background: linear-gradient(135deg, #8b5cf6, #3b82f6);
             display: flex;
             align-items: center;
@@ -394,18 +565,29 @@
             padding: 1.5rem;
         }
 
+        .project-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #0a0a0f;
+        }
+
+        .project-info p {
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+
         .project-tech {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-top: 1rem;
         }
 
         .tech-tag {
-            background: rgba(139, 92, 246, 0.2);
+            background: #f1f5f9;
             padding: 0.2rem 0.6rem;
             border-radius: 2rem;
             font-size: 0.7rem;
+            color: #475569;
         }
 
         /* Contact Section */
@@ -415,10 +597,9 @@
             gap: 3rem;
         }
 
-        .contact-info, .contact-form {
-            background: rgba(30, 30, 50, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+        .contact-info {
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 1.5rem;
             padding: 2rem;
         }
@@ -433,7 +614,7 @@
         .contact-icon {
             width: 50px;
             height: 50px;
-            background: rgba(139, 92, 246, 0.15);
+            background: rgba(139, 92, 246, 0.1);
             border-radius: 1rem;
             display: flex;
             align-items: center;
@@ -445,6 +626,13 @@
             color: #8b5cf6;
         }
 
+        .contact-form {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.5rem;
+            padding: 2rem;
+        }
+
         .form-group {
             margin-bottom: 1rem;
         }
@@ -453,10 +641,9 @@
         .form-group textarea {
             width: 100%;
             padding: 0.8rem;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             border-radius: 0.8rem;
-            color: white;
             font-family: inherit;
         }
 
@@ -466,227 +653,380 @@
             border-color: #8b5cf6;
         }
 
+        /* Footer */
         .footer {
             text-align: center;
             padding: 2rem;
-            border-top: 1px solid rgba(139, 92, 246, 0.2);
-            margin-top: 3rem;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
         }
 
-        @media (max-width: 768px) {
+        /* Responsive */
+        @media (max-width: 968px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                gap: 3rem;
+            }
+            .hero-desc {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .btn-group {
+                justify-content: center;
+            }
             .contact-grid {
                 grid-template-columns: 1fr;
             }
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-            .projects-grid {
-                grid-template-columns: 1fr;
+            .nav-links {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Hero Section with TRUE PARALLAX -->
-    <div class="hero-section">
-        <!-- Parallax Layers - Different speeds! -->
-        <div class="parallax__layer--deep">
-            <div class="shape shape-1"></div>
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-circle"></div>
+            <div class="loader-text">Loading portfolio...</div>
         </div>
-        <div class="parallax__layer--back">
-            <div class="shape shape-2"></div>
-            <div class="shape shape-4"></div>
+    </div>
+
+    <div class="bg-gradient"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">CYBER<span style="color:#8b5cf6;">RONIN</span>X1</div>
+            <div class="nav-links">
+                <a href="#home" class="active">Home</a>
+                <a href="#skills">Skills</a>
+                <a href="#services">Services</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+            </div>
         </div>
-        <div class="parallax__layer--base">
-            <div class="shape shape-3"></div>
-        </div>
-        
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
         <div class="hero-content">
             <div class="hero-badge">
-                <i class="fas fa-code"></i> FULL STACK DEVELOPER
+                <i class="fas fa-code"></i> Full Stack Developer
             </div>
-            <h1>CyberRonin<span style="color:#8b5cf6;">X1</span></h1>
-            <div class="typed-container">
-                <div class="typed-text"></div>
-            </div>
-            <p>Building high-performance web applications with PHP, Node.js, and modern front-end technologies.</p>
+            <h1>Code. <span class="gradient-text">Create.</span> Innovate.</h1>
+            <div class="typed-text">>_ CyberRoninX1 | Web Development Expert</div>
+            <p class="hero-desc">Building stunning, high-performance web applications with modern technologies. Let's bring your ideas to life!</p>
             <div class="btn-group">
                 <a href="#contact" class="btn-primary"><i class="fas fa-paper-plane"></i> Hire Me</a>
                 <a href="https://github.com/CyberRoninX1" target="_blank" class="btn-outline"><i class="fab fa-github"></i> GitHub</a>
             </div>
         </div>
-    </div>
+        <div class="hero-visual">
+            <div class="code-card">
+                <div class="code-header">
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                </div>
+                <div class="code-body">
+                    <span class="purple">const</span> developer = {<br>
+                    &nbsp;&nbsp;name: <span class="orange">'CyberRoninX1'</span>,<br>
+                    &nbsp;&nbsp;stack: [<span class="blue">'PHP'</span>, <span class="blue">'Node.js'</span>, <span class="blue">'MongoDB'</span>],<br>
+                    &nbsp;&nbsp;passion: <span class="orange">'Web Development'</span><br>
+                    };<br>
+                    <span class="purple">developer</span>.<span class="blue">build()</span>;
+                </div>
+            </div>
+        </div>
+    </section>
 
-               <div class="skill-card"><i class="fab fa-node-js"></i><h4>Node.js</h4></div>
-            <div class="skill-card"><i class="fab fa-react"></i><h4>React</h4></div>
-            <div class="skill-card"><i class="fab fa-git-alt"></i><h4>Git</h4></div>
+    <!-- Skills Section -->
+    <section id="skills">
+        <h2 class="section-title">⚡ Tech Stack</h2>
+        <div class="skills-grid">
+            <div class="skill-card"><i class="fab fa-html5"></i><h4>HTML5</h4></div>
+            <div class="skill-card"><i class="fab fa-css3-alt"></i><h4>CSS3</h4></div>
+            <div class="skill-card"><i class="fab fa-js"></i><h4>JavaScript</h4></div>
+            <div class="skill-card"><i class="fab fa-php"></i><h4>PHP</h4></div>
+            <div class="skill-card"><i class="fas fa-database"></i><h4>MySQL</h4></div>
+            <div class="skill-card"><i class="fab fa-github"></i><h4>GitHub</h4></div>
+            <div class="skill-card"><i class="fas fa-database"></i><h4>MongoDB</h4></div>
+            <div class="skill-card"><i class="fab fa-node-js"></i><h4>Node.js</h4></div>
+            <div class="skill-card"><i class="fab fa-whatsapp"></i><h4>Baileys</h4></div>
         </div>
     </section>
 
     <!-- Services Section -->
-    <section>
-        <h2 class="section-title">💼 Services</h2>
+    <section id="services">
+        <h2 class="section-title">💰 Service Packages</h2>
         <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-rocket"></i></div>
+                <h3>Startup Launch</h3>
+                <div class="price">Rs. 15,000 <small>/ one-time</small></div>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> 3-5 Page Website</li>
+                    <li><i class="fas fa-check"></i> Mobile Responsive</li>
+                    <li><i class="fas fa-check"></i> Contact Form</li>
+                    <li><i class="fas fa-check"></i> Social Media Integration</li>
+                    <li><i class="fas fa-check"></i> 1 Month Support</li>
+                </ul>
+                <button class="service-btn" onclick="orderPackage('Startup Launch')">Get Started →</button>
+            </div>
 
             <div class="service-card featured">
-                <div class="popular-badge">POPULAR</div>
-                <div class="service-icon"><i class="fas fa-code"></i></div>
-                <h3>Full Stack Development</h3>
-                <p>Complete web app development from frontend to backend.</p>
-                <div class="price">$300+</div>
+                <div class="popular-badge">🔥 Most Popular</div>
+                <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Business Pro</h3>
+                <div class="price">Rs. 35,000 <small>/ one-time</small></div>
                 <ul class="service-features">
-                    <li><i class="fas fa-check"></i> Responsive UI</li>
-                    <li><i class="fas fa-check"></i> API Integration</li>
-                    <li><i class="fas fa-check"></i> Database Setup</li>
+                    <li><i class="fas fa-check"></i> 5-10 Page Website</li>
+                    <li><i class="fas fa-check"></i> E-commerce Ready</li>
+                    <li><i class="fas fa-check"></i> WhatsApp Integration</li>
+                    <li><i class="fas fa-check"></i> Payment Gateway</li>
+                    <li><i class="fas fa-check"></i> 3 Months Support</li>
                 </ul>
-                <button class="service-btn">Get Started</button>
+                <button class="service-btn" onclick="orderPackage('Business Pro')">Get Started →</button>
             </div>
 
             <div class="service-card">
-                <div class="service-icon"><i class="fas fa-paint-brush"></i></div>
-                <h3>Frontend Design</h3>
-                <p>Modern, animated, and clean UI/UX design.</p>
-                <div class="price">$120+</div>
+                <div class="service-icon"><i class="fas fa-crown"></i></div>
+                <h3>Enterprise Elite</h3>
+                <div class="price">Rs. 75,000 <small>/ one-time</small></div>
                 <ul class="service-features">
-                    <li><i class="fas fa-check"></i> Responsive</li>
-                    <li><i class="fas fa-check"></i> Animations</li>
-                    <li><i class="fas fa-check"></i> Clean Code</li>
+                    <li><i class="fas fa-check"></i> 15+ Page Website</li>
+                    <li><i class="fas fa-check"></i> Full E-commerce Suite</li>
+                    <li><i class="fas fa-check"></i> Admin Dashboard</li>
+                    <li><i class="fas fa-check"></i> Custom Features</li>
+                    <li><i class="fas fa-check"></i> 12 Months Support</li>
                 </ul>
-                <button class="service-btn">Get Started</button>
+                <button class="service-btn" onclick="orderPackage('Enterprise Elite')">Get Started →</button>
             </div>
-
         </div>
     </section>
 
-    <!-- Projects -->
-    <section>
-        <h2 class="section-title">🚀 Projects</h2>
+    <!-- Projects Section -->
+    <section id="projects">
+        <h2 class="section-title">🚀 Featured Projects</h2>
         <div class="projects-grid">
-
             <div class="project-card">
-                <div class="project-image"><i class="fas fa-globe"></i></div>
+                <div class="project-image"><i class="fas fa-store"></i></div>
                 <div class="project-info">
-                    <h3>Portfolio Website</h3>
-                    <p>Personal animated portfolio with parallax effects.</p>
-                    <div class="project-tech">
-                        <span class="tech-tag">HTML</span>
-                        <span class="tech-tag">CSS</span>
-                        <span class="tech-tag">JS</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="project-card">
-                <div class="project-image"><i class="fas fa-database"></i></div>
-                <div class="project-info">
-                    <h3>Admin Dashboard</h3>
-                    <p>Full stack dashboard with authentication.</p>
+                    <h3>Mahawilacchiya E-Shop</h3>
+                    <p>Complete e-commerce platform with WhatsApp integration, real-time order tracking, and delivery management.</p>
                     <div class="project-tech">
                         <span class="tech-tag">PHP</span>
                         <span class="tech-tag">MySQL</span>
+                        <span class="tech-tag">WhatsApp API</span>
                     </div>
                 </div>
             </div>
-
+            <div class="project-card">
+                <div class="project-image"><i class="fab fa-whatsapp"></i></div>
+                <div class="project-info">
+                    <h3>WhatsApp Bot Suite</h3>
+                    <p>Multi-session WhatsApp bot for automated notifications, OTP verification, and admin commands.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">Baileys</span>
+                        <span class="tech-tag">Express</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-image"><i class="fas fa-chart-line"></i></div>
+                <div class="project-info">
+                    <h3>Admin Dashboard</h3>
+                    <p>Real-time analytics dashboard with seller management, payment verification, and reporting.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">PHP</span>
+                        <span class="tech-tag">Chart.js</span>
+                        <span class="tech-tag">AJAX</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Contact -->
+    <!-- Contact Section -->
     <section id="contact">
-        <h2 class="section-title">📩 Contact Me</h2>
+        <h2 class="section-title">📬 Let's Connect</h2>
         <div class="contact-grid">
-
             <div class="contact-info">
                 <div class="contact-item">
+                    <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+                    <div><strong>WhatsApp</strong><br>+94 71 234 5678</div>
+                </div>
+                <div class="contact-item">
                     <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                    <div>Email: cyberronin@example.com</div>
+                    <div><strong>Email</strong><br>cyberronin@proton.me</div>
                 </div>
                 <div class="contact-item">
                     <div class="contact-icon"><i class="fab fa-github"></i></div>
-                    <div>GitHub: CyberRoninX1</div>
+                    <div><strong>GitHub</strong><br>/CyberRoninX1</div>
                 </div>
             </div>
-
             <div class="contact-form">
-                <div class="form-group">
-                    <input type="text" placeholder="Your Name">
-                </div>
-                <div class="form-group">
-                    <input type="email" placeholder="Your Email">
-                </div>
-                <div class="form-group">
-                    <textarea rows="4" placeholder="Message"></textarea>
-                </div>
-                <button class="service-btn">Send Message</button>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea rows="5" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="service-btn">Send Message →</button>
+                </form>
             </div>
-
         </div>
     </section>
 
-    <div class="footer">
-        © 2026 CyberRoninX1 — Built with ⚡
-    </div>
+    <footer class="footer">
+        <p>&copy; 2025 CyberRoninX1 | Code. Create. Innovate.</p>
+    </footer>
 
-    <!-- JS Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script>
-        // GSAP Scroll Animations
+        // Hide loader after page load
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
+
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursorFollower.style.left = e.clientX + 'px';
+            cursorFollower.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('mousedown', () => {
+            cursor.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            cursorFollower.style.transform = 'translate(-50%, -50%) scale(1.3)';
+        });
+
+        document.addEventListener('mouseup', () => {
+            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
+
+        // GSAP Animations
         gsap.registerPlugin(ScrollTrigger);
 
-        gsap.utils.toArray("section").forEach(section => {
-            gsap.from(section, {
-                opacity: 0,
-                y: 80,
-                duration: 1,
+        // Hero Animation
+        gsap.from('.hero-content', {
+            duration: 1,
+            y: 50,
+            opacity: 0,
+            ease: 'power3.out'
+        });
+
+        gsap.from('.hero-visual', {
+            duration: 1,
+            x: 50,
+            opacity: 0,
+            ease: 'power3.out',
+            delay: 0.3
+        });
+
+        // Section Animations
+        gsap.utils.toArray('.skill-card, .service-card, .project-card').forEach((card, i) => {
+            gsap.from(card, {
                 scrollTrigger: {
-                    trigger: section,
-                    start: "top 80%",
+                    trigger: card,
+                    start: 'top 85%',
+                    toggleActions: 'play none none reverse'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.6,
+                delay: i * 0.1
+            });
+        });
+
+        // Navbar Active on Scroll
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-links a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 200;
+                if (scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
                 }
             });
         });
 
-        // Parallax movement (mouse effect)
-        document.addEventListener("mousemove", (e) => {
-            const x = (window.innerWidth - e.pageX * 2) / 100;
-            const y = (window.innerHeight - e.pageY * 2) / 100;
-
-            document.querySelectorAll(".shape").forEach((shape) => {
-                shape.style.transform = `translate(${x}px, ${y}px)`;
-            });
-        });
-
-        // Typing Effect
-        const texts = [
-            "Full Stack Developer",
-            "PHP & Node.js Expert",
-            "UI Animation Lover",
-            "Freelancer 🚀"
-        ];
-
-        let count = 0;
-        let index = 0;
-        let currentText = "";
-        let letter = "";
-
-        function type() {
-            if (count === texts.length) count = 0;
-            currentText = texts[count];
-            letter = currentText.slice(0, ++index);
-
-            document.querySelector(".typed-text").textContent = letter;
-
-            if (letter.length === currentText.length) {
-                setTimeout(() => {
-                    index = 0;
-                    count++;
-                }, 1500);
-            }
-
-            setTimeout(type, 80);
+        // Order Package Function
+        function orderPackage(packageName) {
+            window.location.href = `https://wa.me/94712345678?text=Hi! I'm interested in the ${packageName} package. Can you tell me more?`;
         }
 
-        type();
-    </script>
+        // Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! I will get back to you within 24 hours.');
+            this.reset();
+        });
 
+        // Typed Text Animation
+        const typedElement = document.querySelector('.typed-text');
+        const texts = ['PHP & MySQL Developer', 'Node.js Expert', 'Full Stack Developer', 'WhatsApp Bot Specialist'];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeEffect() {
+            const currentText = texts[textIndex];
+            if (isDeleting) {
+                typedElement.textContent = '>_ ' + currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typedElement.textContent = '>_ ' + currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentText.length) {
+                isDeleting = true;
+                setTimeout(typeEffect, 2000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % texts.length;
+                setTimeout(typeEffect, 500);
+            } else {
+                setTimeout(typeEffect, isDeleting ? 50 : 100);
+            }
+        }
+
+        typeEffect();
+    </script>
 </body>
 </html>
