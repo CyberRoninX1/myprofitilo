@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>CyberRoninX1 | Digital Architect & Cyber Guardian</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>CyberRoninX1 | Full Stack Developer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- GSAP for buttery animations -->
+    <!-- GSAP for premium animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
@@ -19,65 +19,131 @@
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background: #0a0a0f;
-            color: #e2e8f0;
+            background: #ffffff;
+            color: #0a0a0f;
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
 
-        /* Custom Cursor */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #8b5cf6;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: 0.1s;
-            transform: translate(-50%, -50%);
-        }
-
-        .cursor-follower {
-            width: 40px;
-            height: 40px;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.5);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            transition: 0.2s;
-            transform: translate(-50%, -50%);
-            backdrop-filter: blur(2px);
-        }
-
-        /* Animated Background */
-        .bg-animation {
+        /* Premium Gradient Background */
+        .bg-gradient {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -2;
-            background: linear-gradient(135deg, #0a0a0f 0%, #0f0f1a 100%);
+            background: radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+                        linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
         }
 
-        .noise {
+        /* Animated Blobs */
+        .blob {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: floatBlob 20s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            background: rgba(139, 92, 246, 0.08);
+            top: -200px;
+            right: -200px;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            background: rgba(59, 130, 246, 0.08);
+            bottom: -200px;
+            left: -200px;
+            width: 500px;
+            height: 500px;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            background: rgba(236, 72, 153, 0.05);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            animation-delay: -10s;
+        }
+
+        @keyframes floatBlob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 12px;
+            height: 12px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: 0.05s;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: 0.15s;
+            transform: translate(-50%, -50%);
+            backdrop-filter: blur(2px);
+        }
+
+        /* Loading Screen */
+        .loader {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-radial-gradient(circle at 20% 30%, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 2px, transparent 2px, transparent 4px);
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.5;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: 0.5s;
         }
 
-        /* Glow Effects */
-        .glow-text {
-            text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-circle {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #8b5cf6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            font-family: 'JetBrains Mono', monospace;
+            color: #8b5cf6;
+            letter-spacing: 2px;
         }
 
         /* Navigation */
@@ -87,9 +153,9 @@
             left: 0;
             right: 0;
             padding: 1.2rem 5%;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
             z-index: 100;
             transition: all 0.3s;
         }
@@ -109,13 +175,6 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: -0.02em;
-        }
-
-        .logo span {
-            color: #8b5cf6;
-            background: none;
-            -webkit-background-clip: unset;
         }
 
         .nav-links {
@@ -124,7 +183,7 @@
         }
 
         .nav-links a {
-            color: #94a3b8;
+            color: #475569;
             text-decoration: none;
             font-weight: 500;
             transition: 0.3s;
@@ -149,7 +208,7 @@
 
         .nav-links a:hover,
         .nav-links a.active {
-            color: white;
+            color: #8b5cf6;
         }
 
         /* Hero Section */
@@ -171,11 +230,10 @@
             display: inline-block;
             padding: 0.3rem 1rem;
             background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.3);
             border-radius: 2rem;
             font-size: 0.8rem;
+            color: #8b5cf6;
             margin-bottom: 1.5rem;
-            backdrop-filter: blur(5px);
         }
 
         .hero h1 {
@@ -183,10 +241,11 @@
             font-weight: 700;
             line-height: 1.1;
             margin-bottom: 1.5rem;
+            color: #0a0a0f;
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6, #a855f7);
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -200,7 +259,7 @@
         }
 
         .hero-desc {
-            color: #94a3b8;
+            color: #64748b;
             max-width: 550px;
             margin-bottom: 2rem;
             line-height: 1.6;
@@ -229,7 +288,7 @@
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
         }
 
         .btn-outline {
@@ -237,7 +296,7 @@
             background: transparent;
             border: 1.5px solid #8b5cf6;
             border-radius: 2rem;
-            color: #cbd5e1;
+            color: #475569;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -248,22 +307,8 @@
         }
 
         .btn-outline:hover {
-            background: rgba(139, 92, 246, 0.1);
+            background: rgba(139, 92, 246, 0.05);
             transform: translateY(-3px);
-            border-color: #a855f7;
-        }
-
-        /* Hero Stats */
-        .hero-stats {
-            display: flex;
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .stat-item h3 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #8b5cf6;
         }
 
         /* Hero Visual */
@@ -271,44 +316,42 @@
             flex: 1;
             display: flex;
             justify-content: center;
-            align-items: center;
         }
 
-        .code-terminal {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
+        .code-card {
+            background: #1e1e2e;
             border-radius: 1rem;
             padding: 1.5rem;
-            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 380px;
         }
 
-        .terminal-header {
+        .code-header {
             display: flex;
             gap: 0.5rem;
             margin-bottom: 1rem;
         }
 
-        .terminal-dot {
+        .code-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
         }
 
-        .terminal-dot:nth-child(1) { background: #ef4444; }
-        .terminal-dot:nth-child(2) { background: #eab308; }
-        .terminal-dot:nth-child(3) { background: #22c55e; }
+        .code-dot:nth-child(1) { background: #ff5f56; }
+        .code-dot:nth-child(2) { background: #ffbd2e; }
+        .code-dot:nth-child(3) { background: #27c93f; }
 
-        .terminal-body {
+        .code-body {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.8rem;
-            color: #86efac;
+            color: #a5d6ff;
         }
 
-        .terminal-body .purple { color: #c084fc; }
-        .terminal-body .blue { color: #60a5fa; }
+        .code-body .purple { color: #c792ea; }
+        .code-body .blue { color: #82aaff; }
+        .code-body .orange { color: #ffcb6b; }
 
         /* Section Styles */
         section {
@@ -323,6 +366,7 @@
             text-align: center;
             margin-bottom: 3rem;
             position: relative;
+            color: #0a0a0f;
         }
 
         .section-title::after {
@@ -345,20 +389,20 @@
         }
 
         .skill-card {
-            background: rgba(20, 25, 40, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 1rem;
             padding: 1.5rem;
             text-align: center;
             transition: all 0.3s;
             cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
         }
 
         .skill-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             border-color: #8b5cf6;
-            background: rgba(139, 92, 246, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         }
 
         .skill-card i {
@@ -370,9 +414,10 @@
         .skill-card h4 {
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
+            color: #0a0a0f;
         }
 
-        /* Services / Packages Section */
+        /* Services Grid */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -380,20 +425,19 @@
         }
 
         .service-card {
-            background: rgba(20, 25, 40, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 1.5rem;
             padding: 2rem;
             transition: all 0.3s;
             position: relative;
-            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
         }
 
         .service-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
             border-color: #8b5cf6;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.05);
         }
 
         .service-card.featured {
@@ -410,12 +454,13 @@
             border-radius: 2rem;
             font-size: 0.7rem;
             font-weight: 600;
+            color: white;
         }
 
         .service-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+            width: 60px;
+            height: 60px;
+            background: rgba(139, 92, 246, 0.1);
             border-radius: 1rem;
             display: flex;
             align-items: center;
@@ -424,13 +469,14 @@
         }
 
         .service-icon i {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #8b5cf6;
         }
 
         .service-card h3 {
             font-size: 1.3rem;
             margin-bottom: 0.5rem;
+            color: #0a0a0f;
         }
 
         .price {
@@ -459,7 +505,7 @@
         }
 
         .service-features i {
-            color: #22c55e;
+            color: #10b981;
             font-size: 0.8rem;
         }
 
@@ -477,7 +523,7 @@
 
         .service-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
         }
 
         /* Projects Grid */
@@ -488,17 +534,18 @@
         }
 
         .project-card {
-            background: rgba(20, 25, 40, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 1.5rem;
             overflow: hidden;
             transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
         }
 
         .project-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             border-color: #8b5cf6;
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.05);
         }
 
         .project-image {
@@ -510,7 +557,7 @@
         }
 
         .project-image i {
-            font-size: 3.5rem;
+            font-size: 3rem;
             color: white;
         }
 
@@ -521,45 +568,26 @@
         .project-info h3 {
             font-size: 1.2rem;
             margin-bottom: 0.5rem;
+            color: #0a0a0f;
+        }
+
+        .project-info p {
+            color: #64748b;
+            margin-bottom: 1rem;
         }
 
         .project-tech {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin: 1rem 0;
         }
 
         .tech-tag {
-            background: rgba(139, 92, 246, 0.2);
+            background: #f1f5f9;
             padding: 0.2rem 0.6rem;
             border-radius: 2rem;
             font-size: 0.7rem;
-        }
-
-        /* Timeline */
-        .timeline {
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-left: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .timeline-icon {
-            position: absolute;
-            left: -1rem;
-            top: 0;
-            width: 2.5rem;
-            height: 2.5rem;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: #475569;
         }
 
         /* Contact Section */
@@ -570,11 +598,10 @@
         }
 
         .contact-info {
-            background: rgba(20, 25, 40, 0.6);
-            backdrop-filter: blur(10px);
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 1.5rem;
             padding: 2rem;
-            border: 1px solid rgba(139, 92, 246, 0.2);
         }
 
         .contact-item {
@@ -587,7 +614,7 @@
         .contact-icon {
             width: 50px;
             height: 50px;
-            background: rgba(139, 92, 246, 0.2);
+            background: rgba(139, 92, 246, 0.1);
             border-radius: 1rem;
             display: flex;
             align-items: center;
@@ -600,11 +627,10 @@
         }
 
         .contact-form {
-            background: rgba(20, 25, 40, 0.6);
-            backdrop-filter: blur(10px);
+            background: white;
+            border: 1px solid #e2e8f0;
             border-radius: 1.5rem;
             padding: 2rem;
-            border: 1px solid rgba(139, 92, 246, 0.2);
         }
 
         .form-group {
@@ -615,10 +641,9 @@
         .form-group textarea {
             width: 100%;
             padding: 0.8rem;
-            background: rgba(10, 10, 15, 0.8);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             border-radius: 0.8rem;
-            color: white;
             font-family: inherit;
         }
 
@@ -632,8 +657,8 @@
         .footer {
             text-align: center;
             padding: 2rem;
-            border-top: 1px solid rgba(139, 92, 246, 0.2);
-            margin-top: 3rem;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
         }
 
         /* Responsive */
@@ -650,9 +675,6 @@
             .btn-group {
                 justify-content: center;
             }
-            .hero-stats {
-                justify-content: center;
-            }
             .contact-grid {
                 grid-template-columns: 1fr;
             }
@@ -664,14 +686,25 @@
 </head>
 <body>
 
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-circle"></div>
+            <div class="loader-text">Loading portfolio...</div>
+        </div>
+    </div>
+
+    <div class="bg-gradient"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
-    <div class="bg-animation"></div>
-    <div class="noise"></div>
 
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">CYBER<span>RONIN</span>X1</div>
+            <div class="logo">CYBER<span style="color:#8b5cf6;">RONIN</span>X1</div>
             <div class="nav-links">
                 <a href="#home" class="active">Home</a>
                 <a href="#skills">Skills</a>
@@ -686,35 +719,30 @@
     <section id="home" class="hero">
         <div class="hero-content">
             <div class="hero-badge">
-                <i class="fas fa-shield-halos"></i> White Hat | Digital Architect
+                <i class="fas fa-code"></i> Full Stack Developer
             </div>
-            <h1>Code. <span class="gradient-text">Create.</span> Conquer.</h1>
-            <div class="typed-text">>_ CyberRoninX1 | Full Stack Developer & Cyber Guardian</div>
-            <p class="hero-desc">Transforming ideas into digital reality with cutting-edge web solutions. Specialized in e-commerce, WhatsApp automation, and cyber-secure applications.</p>
+            <h1>Code. <span class="gradient-text">Create.</span> Innovate.</h1>
+            <div class="typed-text">>_ CyberRoninX1 | Web Development Expert</div>
+            <p class="hero-desc">Building stunning, high-performance web applications with modern technologies. Let's bring your ideas to life!</p>
             <div class="btn-group">
                 <a href="#contact" class="btn-primary"><i class="fas fa-paper-plane"></i> Hire Me</a>
                 <a href="https://github.com/CyberRoninX1" target="_blank" class="btn-outline"><i class="fab fa-github"></i> GitHub</a>
             </div>
-            <div class="hero-stats">
-                <div class="stat-item"><h3>15+</h3><span>Projects</span></div>
-                <div class="stat-item"><h3>100%</h3><span>Satisfaction</span></div>
-                <div class="stat-item"><h3>24/7</h3><span>Support</span></div>
-            </div>
         </div>
         <div class="hero-visual">
-            <div class="code-terminal">
-                <div class="terminal-header">
-                    <div class="terminal-dot"></div>
-                    <div class="terminal-dot"></div>
-                    <div class="terminal-dot"></div>
+            <div class="code-card">
+                <div class="code-header">
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
                 </div>
-                <div class="terminal-body">
-                    <span class="purple">const</span> ronin = {<br>
-                    &nbsp;&nbsp;role: <span class="blue">'Full Stack Dev'</span>,<br>
-                    &nbsp;&nbsp;stack: [<span class="blue">'PHP'</span>, <span class="blue">'Node.js'</span>, <span class="blue">'React'</span>],<br>
-                    &nbsp;&nbsp;mission: <span class="blue">'Build Amazing Web Apps'</span><br>
+                <div class="code-body">
+                    <span class="purple">const</span> developer = {<br>
+                    &nbsp;&nbsp;name: <span class="orange">'CyberRoninX1'</span>,<br>
+                    &nbsp;&nbsp;stack: [<span class="blue">'PHP'</span>, <span class="blue">'Node.js'</span>, <span class="blue">'MongoDB'</span>],<br>
+                    &nbsp;&nbsp;passion: <span class="orange">'Web Development'</span><br>
                     };<br>
-                    <span class="purple">ronin</span>.<span class="blue">launch()</span>;
+                    <span class="purple">developer</span>.<span class="blue">build()</span>;
                 </div>
             </div>
         </div>
@@ -722,20 +750,21 @@
 
     <!-- Skills Section -->
     <section id="skills">
-        <h2 class="section-title">⚡ Technical Arsenal</h2>
+        <h2 class="section-title">⚡ Tech Stack</h2>
         <div class="skills-grid">
-            <div class="skill-card"><i class="fab fa-php"></i><h4>PHP & Laravel</h4></div>
-            <div class="skill-card"><i class="fab fa-js"></i><h4>JavaScript/Node.js</h4></div>
-            <div class="skill-card"><i class="fab fa-python"></i><h4>Python</h4></div>
-            <div class="skill-card"><i class="fas fa-database"></i><h4>MySQL/MongoDB</h4></div>
-            <div class="skill-card"><i class="fab fa-react"></i><h4>React/Vue</h4></div>
-            <div class="skill-card"><i class="fab fa-whatsapp"></i><h4>WhatsApp API</h4></div>
-            <div class="skill-card"><i class="fas fa-shield-alt"></i><h4>Cyber Security</h4></div>
-            <div class="skill-card"><i class="fas fa-cloud"></i><h4>Cloud Deployment</h4></div>
+            <div class="skill-card"><i class="fab fa-html5"></i><h4>HTML5</h4></div>
+            <div class="skill-card"><i class="fab fa-css3-alt"></i><h4>CSS3</h4></div>
+            <div class="skill-card"><i class="fab fa-js"></i><h4>JavaScript</h4></div>
+            <div class="skill-card"><i class="fab fa-php"></i><h4>PHP</h4></div>
+            <div class="skill-card"><i class="fas fa-database"></i><h4>MySQL</h4></div>
+            <div class="skill-card"><i class="fab fa-github"></i><h4>GitHub</h4></div>
+            <div class="skill-card"><i class="fas fa-database"></i><h4>MongoDB</h4></div>
+            <div class="skill-card"><i class="fab fa-node-js"></i><h4>Node.js</h4></div>
+            <div class="skill-card"><i class="fab fa-whatsapp"></i><h4>Baileys</h4></div>
         </div>
     </section>
 
-    <!-- Services / Packages Section -->
+    <!-- Services Section -->
     <section id="services">
         <h2 class="section-title">💰 Service Packages</h2>
         <div class="services-grid">
@@ -764,7 +793,6 @@
                     <li><i class="fas fa-check"></i> WhatsApp Integration</li>
                     <li><i class="fas fa-check"></i> Payment Gateway</li>
                     <li><i class="fas fa-check"></i> 3 Months Support</li>
-                    <li><i class="fas fa-check"></i> SEO Optimized</li>
                 </ul>
                 <button class="service-btn" onclick="orderPackage('Business Pro')">Get Started →</button>
             </div>
@@ -779,7 +807,6 @@
                     <li><i class="fas fa-check"></i> Admin Dashboard</li>
                     <li><i class="fas fa-check"></i> Custom Features</li>
                     <li><i class="fas fa-check"></i> 12 Months Support</li>
-                    <li><i class="fas fa-check"></i> SSL & Security</li>
                 </ul>
                 <button class="service-btn" onclick="orderPackage('Enterprise Elite')">Get Started →</button>
             </div>
@@ -794,7 +821,7 @@
                 <div class="project-image"><i class="fas fa-store"></i></div>
                 <div class="project-info">
                     <h3>Mahawilacchiya E-Shop</h3>
-                    <p>Complete e-commerce platform with WhatsApp integration, real-time order tracking, and delivery management system.</p>
+                    <p>Complete e-commerce platform with WhatsApp integration, real-time order tracking, and delivery management.</p>
                     <div class="project-tech">
                         <span class="tech-tag">PHP</span>
                         <span class="tech-tag">MySQL</span>
@@ -806,7 +833,7 @@
                 <div class="project-image"><i class="fab fa-whatsapp"></i></div>
                 <div class="project-info">
                     <h3>WhatsApp Bot Suite</h3>
-                    <p>Multi-session WhatsApp bot for automated notifications, OTP verification, and admin command system.</p>
+                    <p>Multi-session WhatsApp bot for automated notifications, OTP verification, and admin commands.</p>
                     <div class="project-tech">
                         <span class="tech-tag">Node.js</span>
                         <span class="tech-tag">Baileys</span>
@@ -818,7 +845,7 @@
                 <div class="project-image"><i class="fas fa-chart-line"></i></div>
                 <div class="project-info">
                     <h3>Admin Dashboard</h3>
-                    <p>Real-time analytics dashboard with seller management, payment verification, and commission tracking.</p>
+                    <p>Real-time analytics dashboard with seller management, payment verification, and reporting.</p>
                     <div class="project-tech">
                         <span class="tech-tag">PHP</span>
                         <span class="tech-tag">Chart.js</span>
@@ -846,10 +873,6 @@
                     <div class="contact-icon"><i class="fab fa-github"></i></div>
                     <div><strong>GitHub</strong><br>/CyberRoninX1</div>
                 </div>
-                <div class="contact-item">
-                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                    <div><strong>Location</strong><br>Anuradhapura, Sri Lanka</div>
-                </div>
             </div>
             <div class="contact-form">
                 <form id="contactForm">
@@ -869,13 +892,24 @@
     </section>
 
     <footer class="footer">
-        <p>&copy; 2025 CyberRoninX1 | Code. Create. Conquer.</p>
+        <p>&copy; 2025 CyberRoninX1 | Code. Create. Innovate.</p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script>
-        // Cursor Animation
+        // Hide loader after page load
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
+
+        // Custom Cursor
         const cursor = document.querySelector('.cursor');
         const cursorFollower = document.querySelector('.cursor-follower');
 
@@ -888,7 +922,7 @@
 
         document.addEventListener('mousedown', () => {
             cursor.style.transform = 'translate(-50%, -50%) scale(0.8)';
-            cursorFollower.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            cursorFollower.style.transform = 'translate(-50%, -50%) scale(1.3)';
         });
 
         document.addEventListener('mouseup', () => {
@@ -916,7 +950,7 @@
         });
 
         // Section Animations
-        gsap.utils.toArray('.skill-card, .service-card, .project-card, .timeline-item').forEach((card, i) => {
+        gsap.utils.toArray('.skill-card, .service-card, .project-card').forEach((card, i) => {
             gsap.from(card, {
                 scrollTrigger: {
                     trigger: card,
@@ -962,6 +996,37 @@
             alert('Thank you for your message! I will get back to you within 24 hours.');
             this.reset();
         });
+
+        // Typed Text Animation
+        const typedElement = document.querySelector('.typed-text');
+        const texts = ['PHP & MySQL Developer', 'Node.js Expert', 'Full Stack Developer', 'WhatsApp Bot Specialist'];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeEffect() {
+            const currentText = texts[textIndex];
+            if (isDeleting) {
+                typedElement.textContent = '>_ ' + currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typedElement.textContent = '>_ ' + currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentText.length) {
+                isDeleting = true;
+                setTimeout(typeEffect, 2000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % texts.length;
+                setTimeout(typeEffect, 500);
+            } else {
+                setTimeout(typeEffect, isDeleting ? 50 : 100);
+            }
+        }
+
+        typeEffect();
     </script>
 </body>
 </html>
