@@ -2,20 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>CyberRoninX1 | Immersive 3D Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>CyberRoninX1 | 3D Interactive Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- GSAP + Three.js for 3D immersive experience -->
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Three.js CDN -->
     <script type="importmap">
         {
             "imports": {
-                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
             }
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -25,91 +27,86 @@
 
         body {
             font-family: 'Space Grotesk', sans-serif;
-            background: #050510;
-            color: #e2e8f0;
+            background: #05050A;
+            color: #f0f0ff;
             overflow-x: hidden;
-            scroll-behavior: smooth;
         }
 
-        /* Canvas 3D Background */
+        /* Canvas container for 3D background */
         #canvas-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -2;
+            z-index: 0;
             pointer-events: none;
         }
 
-        /* Overlay gradient to enhance readability */
-        .overlay-gradient {
+        /* Dynamic gradient overlay for depth */
+        .gradient-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, rgba(5,5,20,0.3) 0%, rgba(5,5,20,0.85) 100%);
-            z-index: -1;
+            background: radial-gradient(circle at 30% 40%, rgba(5,5,20,0.3) 0%, rgba(5,5,20,0.85) 100%);
+            z-index: 1;
             pointer-events: none;
         }
 
-        /* Noise texture effect */
         .noise {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-radial-gradient(circle at 20% 30%, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 4px);
+            background: repeating-radial-gradient(circle at 25% 35%, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px);
             pointer-events: none;
-            z-index: -1;
-            opacity: 0.6;
+            z-index: 1;
+            opacity: 0.5;
         }
 
-        /* Custom cursor - glitchy */
+        /* Custom cursor */
         .cursor {
-            width: 24px;
-            height: 24px;
-            border: 2px solid #a855f7;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #c084fc;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: 0.08s linear;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 12px rgba(192,132,252,0.7);
+        }
+        .cursor-follower {
+            width: 45px;
+            height: 45px;
+            background: rgba(139,92,246,0.15);
+            border: 1px solid rgba(139,92,246,0.6);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 9999;
-            transition: 0.08s linear;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 15px rgba(168,85,247,0.6);
-            backdrop-filter: blur(2px);
-        }
-
-        .cursor-follower {
-            width: 50px;
-            height: 50px;
-            background: rgba(139, 92, 246, 0.15);
-            border: 1px solid rgba(139, 92, 246, 0.5);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            transition: 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: 0.2s cubic-bezier(0.2,0.9,0.4,1.2);
             transform: translate(-50%, -50%);
             backdrop-filter: blur(4px);
         }
 
-        /* Navigation */
+        /* Navbar */
         .navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             padding: 1.2rem 5%;
-            background: rgba(5, 5, 20, 0.6);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+            background: rgba(5,5,15,0.65);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(139,92,246,0.3);
             z-index: 100;
-            transition: all 0.4s;
+            transition: 0.3s;
         }
-
         .nav-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -117,7 +114,6 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .logo {
             font-size: 1.8rem;
             font-weight: 800;
@@ -126,44 +122,27 @@
             background-clip: text;
             color: transparent;
             letter-spacing: -0.02em;
-            text-shadow: 0 0 8px rgba(139,92,246,0.3);
         }
-
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-        }
-
+        .nav-links { display: flex; gap: 2.5rem; }
         .nav-links a {
             color: #cbd5e6;
             text-decoration: none;
             font-weight: 500;
             transition: 0.3s;
             position: relative;
-            font-size: 1rem;
         }
-
         .nav-links a::before {
             content: '';
             position: absolute;
-            bottom: -6px;
+            bottom: -5px;
             left: 0;
             width: 0;
             height: 2px;
             background: linear-gradient(90deg, #c084fc, #3b82f6);
             transition: 0.3s;
-            border-radius: 2px;
         }
-
-        .nav-links a:hover::before,
-        .nav-links a.active::before {
-            width: 100%;
-        }
-
-        .nav-links a:hover {
-            color: white;
-            text-shadow: 0 0 5px #a855f7;
-        }
+        .nav-links a:hover::before, .nav-links a.active::before { width: 100%; }
+        .nav-links a:hover { color: white; text-shadow: 0 0 5px #a855f7; }
 
         /* Hero Section */
         .hero {
@@ -174,64 +153,45 @@
             max-width: 1400px;
             margin: 0 auto;
             position: relative;
-            z-index: 5;
+            z-index: 10;
         }
-
-        .hero-content {
-            flex: 1;
-            backdrop-filter: blur(2px);
-        }
-
+        .hero-content { flex: 1; backdrop-filter: blur(2px); }
         .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
             padding: 0.4rem 1.2rem;
-            background: rgba(139, 92, 246, 0.15);
-            border: 1px solid rgba(139, 92, 246, 0.4);
-            border-radius: 2rem;
+            background: rgba(139,92,246,0.15);
+            border: 1px solid rgba(139,92,246,0.4);
+            border-radius: 3rem;
             font-size: 0.8rem;
             margin-bottom: 1.5rem;
-            backdrop-filter: blur(8px);
-            font-weight: 500;
         }
-
         .hero h1 {
             font-size: clamp(2.8rem, 8vw, 5.5rem);
             font-weight: 800;
             line-height: 1.1;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
-
         .gradient-text {
             background: linear-gradient(135deg, #c084fc, #60a5fa, #a855f7);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
-
         .typed-text {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: #c084fc;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             font-family: 'JetBrains Mono', monospace;
-            text-shadow: 0 0 5px rgba(192,132,252,0.5);
         }
-
         .hero-desc {
             color: #b9c7d9;
             max-width: 550px;
             margin-bottom: 2rem;
-            line-height: 1.7;
-            font-size: 1.05rem;
+            line-height: 1.6;
         }
-
-        .btn-group {
-            display: flex;
-            gap: 1.2rem;
-            flex-wrap: wrap;
-        }
-
+        .btn-group { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-bottom: 2rem; }
         .btn-primary {
             padding: 0.9rem 2rem;
             background: linear-gradient(135deg, #8b5cf6, #3b82f6);
@@ -240,19 +200,14 @@
             color: white;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: 0.3s;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.6rem;
-            box-shadow: 0 0 15px rgba(139,92,246,0.3);
+            box-shadow: 0 0 15px rgba(139,92,246,0.4);
         }
-
-        .btn-primary:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.5);
-        }
-
+        .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 20px 35px rgba(139,92,246,0.5); }
         .btn-outline {
             padding: 0.9rem 2rem;
             background: transparent;
@@ -260,536 +215,482 @@
             border-radius: 3rem;
             color: #e2e8f0;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.6rem;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(4px);
         }
+        .btn-outline:hover { background: rgba(168,85,247,0.2); transform: translateY(-3px); border-color: #c084fc; }
+        .hero-stats { display: flex; gap: 2.5rem; }
+        .stat-item h3 { font-size: 2rem; background: linear-gradient(135deg, #c084fc, #60a5fa); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
-        .btn-outline:hover {
-            background: rgba(168,85,247,0.2);
-            transform: translateY(-3px);
-            border-color: #c084fc;
-            box-shadow: 0 0 20px rgba(168,85,247,0.4);
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .stat-item h3 {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #c084fc, #60a5fa);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        /* Section styles */
-        section {
-            padding: 6rem 5%;
+        /* 3D Configurator Section */
+        .configurator-section {
+            padding: 5rem 5%;
             max-width: 1400px;
             margin: 0 auto;
             position: relative;
-            z-index: 5;
+            z-index: 10;
         }
-
         .section-title {
             font-size: 2.5rem;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 3.5rem;
-            position: relative;
+            margin-bottom: 2rem;
         }
-
         .section-title::after {
             content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
+            display: block;
             width: 100px;
             height: 3px;
             background: linear-gradient(90deg, #c084fc, #3b82f6);
+            margin: 0.6rem auto 0;
             border-radius: 3px;
         }
-
-        /* Skills 3D Cards */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        .configurator-card {
+            background: rgba(12,15,35,0.55);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(139,92,246,0.3);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .configurator-container {
+            display: flex;
+            flex-wrap: wrap;
             gap: 2rem;
+            align-items: center;
         }
-
-        .skill-card {
-            background: rgba(15, 20, 45, 0.55);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
+        .canvas-3d-box {
+            flex: 1.5;
+            min-height: 500px;
+            background: rgba(0,0,0,0.3);
             border-radius: 1.5rem;
-            padding: 1.8rem 1rem;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            overflow: hidden;
+            position: relative;
+        }
+        .controls-panel {
+            flex: 1;
+            background: rgba(0,0,0,0.4);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(139,92,246,0.3);
+        }
+        .color-options {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .color-chip {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
             cursor: pointer;
-            transform-style: preserve-3d;
+            border: 2px solid rgba(255,255,255,0.5);
+            transition: 0.2s;
         }
-
-        .skill-card:hover {
-            transform: translateY(-12px) rotateX(5deg);
-            border-color: #c084fc;
-            background: rgba(139, 92, 246, 0.2);
-            box-shadow: 0 20px 35px rgba(0,0,0,0.4), 0 0 20px rgba(139,92,246,0.3);
+        .color-chip:hover { transform: scale(1.1); border-color: white; }
+        .material-buttons {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
         }
-
-        .skill-card i {
-            font-size: 3rem;
-            color: #c084fc;
-            margin-bottom: 1rem;
-            filter: drop-shadow(0 0 8px rgba(192,132,252,0.6));
+        .mat-btn {
+            background: rgba(139,92,246,0.2);
+            border: 1px solid #8b5cf6;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
         }
+        .mat-btn.active { background: #8b5cf6; color: white; box-shadow: 0 0 12px #8b5cf6; }
 
-        /* Services */
-        .services-grid {
+        /* Scroll animated cards */
+        .scroll-reveal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .reveal-card {
+            background: rgba(12,15,35,0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(139,92,246,0.3);
+            border-radius: 1.8rem;
+            padding: 2rem;
+            transition: 0.4s;
+            opacity: 0;
+            transform: translateY(60px);
+        }
+        .reveal-card i { font-size: 2.5rem; color: #c084fc; margin-bottom: 1rem; }
+        .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
+            margin-top: 2rem;
         }
-
-        .service-card {
-            background: rgba(12, 15, 35, 0.65);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 2rem;
-            padding: 2rem;
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card:hover {
-            transform: translateY(-12px);
-            border-color: #a855f7;
-            box-shadow: 0 25px 40px rgba(0,0,0,0.5);
-        }
-
-        .service-card.featured {
-            border: 2px solid #c084fc;
-            background: rgba(139, 92, 246, 0.15);
-            transform: scale(1.02);
-        }
-
-        .popular-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: linear-gradient(135deg, #a855f7, #3b82f6);
-            padding: 0.3rem 0.9rem;
-            border-radius: 2rem;
-            font-size: 0.7rem;
-            font-weight: bold;
-        }
-
-        .service-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(59,130,246,0.2));
-            border-radius: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .service-icon i {
-            font-size: 2.2rem;
-            color: #c084fc;
-        }
-
-        .price {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #c084fc;
-            margin: 1rem 0;
-        }
-
-        .service-features li {
-            padding: 0.5rem 0;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .service-features i {
-            color: #22c55e;
-        }
-
-        .service-btn {
-            width: 100%;
-            padding: 0.8rem;
-            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
-            border: none;
-            border-radius: 2rem;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .service-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(139,92,246,0.5);
-        }
-
-        /* Projects */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-            gap: 2rem;
-        }
-
         .project-card {
-            background: rgba(12, 15, 35, 0.65);
+            background: rgba(12,15,35,0.65);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 1.8rem;
+            border-radius: 1.5rem;
             overflow: hidden;
             transition: 0.4s;
+            border: 1px solid rgba(139,92,246,0.3);
         }
-
-        .project-card:hover {
-            transform: translateY(-10px) scale(1.01);
-            border-color: #c084fc;
-        }
-
-        .project-image {
-            height: 210px;
+        .project-card:hover { transform: translateY(-10px); border-color: #c084fc; }
+        .project-img {
+            height: 180px;
             background: linear-gradient(135deg, #4c1d95, #1e3a8a);
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
-
-        .project-image i {
-            font-size: 4rem;
-            color: white;
-            filter: drop-shadow(0 0 12px rgba(255,255,255,0.5));
-        }
-
-        .project-info {
-            padding: 1.5rem;
-        }
-
-        .project-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-
-        .tech-tag {
-            background: rgba(139, 92, 246, 0.25);
-            padding: 0.2rem 0.7rem;
-            border-radius: 2rem;
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-
-        /* Contact */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-        }
-
-        .contact-info, .contact-form {
-            background: rgba(12, 15, 35, 0.6);
-            backdrop-filter: blur(14px);
-            border-radius: 2rem;
-            padding: 2rem;
-            border: 1px solid rgba(139, 92, 246, 0.3);
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.8rem;
-        }
-
-        .contact-icon {
-            width: 55px;
-            height: 55px;
-            background: rgba(139, 92, 246, 0.2);
-            border-radius: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .contact-icon i {
-            font-size: 1.5rem;
-            color: #c084fc;
-        }
-
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 0.9rem;
-            background: rgba(5, 5, 20, 0.8);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 1rem;
-            color: white;
-            font-family: inherit;
-            transition: 0.2s;
-        }
-
-        .form-group input:focus, .form-group textarea:focus {
-            border-color: #c084fc;
-            outline: none;
-            box-shadow: 0 0 10px rgba(192,132,252,0.3);
-        }
-
-        footer {
+        .project-img i { font-size: 3rem; color: white; }
+        .project-info { padding: 1.5rem; }
+        .footer {
             text-align: center;
             padding: 2rem;
-            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            border-top: 1px solid rgba(139,92,246,0.2);
+            position: relative;
+            z-index: 10;
         }
-
-        @media (max-width: 968px) {
-            .hero { flex-direction: column; text-align: center; gap: 3rem; }
-            .hero-desc { margin: 0 auto; }
-            .btn-group, .hero-stats { justify-content: center; }
-            .contact-grid { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
-        }
+        @media (max-width: 768px) { .nav-links { display: none; } .configurator-container { flex-direction: column; } }
     </style>
 </head>
 <body>
 
-    <div class="cursor"></div>
-    <div class="cursor-follower"></div>
-    <div id="canvas-container"></div>
-    <div class="overlay-gradient"></div>
-    <div class="noise"></div>
+<div class="cursor"></div>
+<div class="cursor-follower"></div>
+<div id="canvas-container"></div>
+<div class="gradient-overlay"></div>
+<div class="noise"></div>
 
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">CYBER<span>RONIN</span>X1</div>
-            <div class="nav-links">
-                <a href="#home" class="active">Home</a>
-                <a href="#skills">Arsenal</a>
-                <a href="#services">Editions</a>
-                <a href="#projects">Chronicles</a>
-                <a href="#contact">Connect</a>
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">CYBER<span>RONIN</span>X1</div>
+        <div class="nav-links">
+            <a href="#home" class="active">Home</a>
+            <a href="#config">3D Config</a>
+            <a href="#works">Works</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<section id="home" class="hero">
+    <div class="hero-content">
+        <div class="hero-badge"><i class="fas fa-cube"></i> 3D INTERACTIVE ARCHITECT</div>
+        <h1>Rotate.<span class="gradient-text"> Morph.</span> Immerse.</h1>
+        <div class="typed-text">>_ Charuka Mahesh | 3D Web Alchemist</div>
+        <p class="hero-desc">I build hyper-realistic 3D configurators, scroll-driven morph animations, and immersive digital experiences that redefine interaction.</p>
+        <div class="btn-group">
+            <a href="#config" class="btn-primary"><i class="fas fa-cube"></i> Explore 3D Configurator</a>
+            <a href="#" class="btn-outline" id="reelBtn"><i class="fas fa-music"></i> Satisfying Motion Reel</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item"><h3>15+</h3><span>3D Products</span></div>
+            <div class="stat-item"><h3>∞</h3><span>Scroll Effects</span></div>
+            <div class="stat-item"><h3>4.9M</h3><span>Views Vibes</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- 3D Product Configurator Section -->
+<section id="config" class="configurator-section">
+    <h2 class="section-title">🌀 3D Product Configurator</h2>
+    <div class="configurator-card">
+        <div class="configurator-container">
+            <div class="canvas-3d-box" id="config-canvas"></div>
+            <div class="controls-panel">
+                <h3><i class="fas fa-palette"></i> Customize Sneaker</h3>
+                <div class="color-options">
+                    <div class="color-chip" style="background: #ef4444;" data-color="#ef4444"></div>
+                    <div class="color-chip" style="background: #3b82f6;" data-color="#3b82f6"></div>
+                    <div class="color-chip" style="background: #10b981;" data-color="#10b981"></div>
+                    <div class="color-chip" style="background: #f59e0b;" data-color="#f59e0b"></div>
+                    <div class="color-chip" style="background: #a855f7;" data-color="#a855f7"></div>
+                    <div class="color-chip" style="background: #ec4899;" data-color="#ec4899"></div>
+                </div>
+                <div class="material-buttons">
+                    <div class="mat-btn active" data-mat="standard">Matte</div>
+                    <div class="mat-btn" data-mat="metal">Metallic</div>
+                    <div class="mat-btn" data-mat="gloss">Glossy</div>
+                </div>
+                <p><i class="fas fa-mouse-pointer"></i> Drag to rotate | Scroll to zoom</p>
+                <p style="margin-top: 1rem; font-size: 0.8rem; color: #c084fc;">🔥 Real-time raycast lighting + satisfying spin</p>
             </div>
         </div>
-    </nav>
+    </div>
+</section>
 
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <div class="hero-badge"><i class="fas fa-shield-halos"></i> Digital Architect | 3D Realm</div>
-            <h1>Forge.<span class="gradient-text"> Immerse.</span> Dominate.</h1>
-            <div class="typed-text">>_ Charuka Mahesh | Full Stack & 3D Web Alchemist</div>
-            <p class="hero-desc">Architecting next-gen web experiences with immersive 3D, AI-driven automation, and cyber-secure ecosystems. Let's bring your vision to life.</p>
-            <div class="btn-group">
-                <a href="#contact" class="btn-primary"><i class="fas fa-bolt"></i> Deploy Project</a>
-                <a href="https://github.com/CyberRoninX1" target="_blank" class="btn-outline"><i class="fab fa-github"></i> Code Vault</a>
-            </div>
-            <div class="hero-stats">
-                <div class="stat-item"><h3>20+</h3><span>Immersive Works</span></div>
-                <div class="stat-item"><h3>∞</h3><span>Innovation</span></div>
-                <div class="stat-item"><h3>24/7</h3><span>Neural Support</span></div>
-            </div>
-        </div>
-        <div class="hero-visual" style="flex:1; min-height: 300px;"></div>
-    </section>
+<!-- Scroll-Triggered Morphing Cards + Particle Effects -->
+<section id="works">
+    <h2 class="section-title">✨ Scroll Morph Experience</h2>
+    <div class="scroll-reveal-grid">
+        <div class="reveal-card" data-scroll><i class="fas fa-car-side"></i><h3>Hypercar Config</h3><p>Lamborghini-inspired 3D model with realtime paint & rims.</p></div>
+        <div class="reveal-card" data-scroll><i class="fas fa-microchip"></i><h3>Tech Gadget Morph</h3><p>Futuristic drone that unfolds on scroll — smooth transitions.</p></div>
+        <div class="reveal-card" data-scroll><i class="fas fa-shoe-prints"></i><h3>Limited Sneaker</h3><p>Custom kicks with color-shifting materials and hover animation.</p></div>
+    </div>
+    
+    <h2 class="section-title" style="margin-top: 3rem;">🔥 Immersive Projects</h2>
+    <div class="projects-grid">
+        <div class="project-card"><div class="project-img"><i class="fas fa-crown"></i></div><div class="project-info"><h3>Cyber Sneaker X</h3><p>Full 3D configurator with real-time lighting and export.</p><div class="tech-tag" style="display:inline-block; background:#8b5cf6; padding:4px 10px; border-radius:20px;">Three.js</div></div></div>
+        <div class="project-card"><div class="project-img"><i class="fas fa-car"></i></div><div class="project-info"><h3>Vision GT</h3><p>Scroll-triggered car explode/reassemble effect, 4M views.</p><div class="tech-tag" style="display:inline-block; background:#8b5cf6; padding:4px 10px; border-radius:20px;">GSAP + WebGL</div></div></div>
+        <div class="project-card"><div class="project-img"><i class="fas fa-headphones"></i></div><div class="project-info"><h3>Audio Orb</h3><p>Particle system reacting to audio, satisfying 3D motion graphics.</p></div></div>
+    </div>
+</section>
 
-    <section id="skills">
-        <h2 class="section-title">⚡ Cyber Arsenal ⚡</h2>
-        <div class="skills-grid">
-            <div class="skill-card"><i class="fab fa-php"></i><h4>PHP</h4><span>Laravel | Core</span></div>
-            <div class="skill-card"><i class="fab fa-js"></i><h4>JavaScript/TS</h4><span>React | Node</span></div>
-            <div class="skill-card"><i class="fab fa-python"></i><h4>Python</h4><span>AI | Automation</span></div>
-            <div class="skill-card"><i class="fas fa-cube"></i><h4>Three.js</h4><span>3D WebGL</span></div>
-            <div class="skill-card"><i class="fas fa-database"></i><h4>MySQL/Firebase</h4><span>Scalable DB</span></div>
-            <div class="skill-card"><i class="fab fa-whatsapp"></i><h4>WhatsApp API</h4><span>Bot Suite</span></div>
-        </div>
-    </section>
+<section id="contact" style="padding: 4rem 5%; text-align:center; z-index:10; position:relative;">
+    <h2 class="section-title">🌌 Let's Build Your 3D Vision</h2>
+    <div style="background: rgba(12,15,35,0.6); backdrop-filter: blur(16px); max-width: 600px; margin: 0 auto; padding: 2rem; border-radius: 2rem;">
+        <p><i class="fab fa-whatsapp"></i> +94 77 123 4567 | <i class="fas fa-envelope"></i> ronin@3dimmerse.io</p>
+        <button class="btn-primary" id="contactBtn" style="margin-top:1rem;"><i class="fas fa-paper-plane"></i> Start a Project</button>
+    </div>
+</section>
+<footer class="footer"><p>© 2025 CyberRoninX1 | 3D Interactive Portfolio — Rotate. Morph. Satisfy.</p></footer>
 
-    <section id="services">
-        <h2 class="section-title">🔮 Digital Services 🔮</h2>
-        <div class="services-grid">
-            <div class="service-card">
-                <div class="service-icon"><i class="fas fa-cube"></i></div>
-                <h3>3D Immersive Web</h3>
-                <div class="price">$499 <small>/ project</small></div>
-                <ul class="service-features"><li><i class="fas fa-check"></i> Three.js / WebGL</li><li><i class="fas fa-check"></i> Interactive 3D Scenes</li><li><i class="fas fa-check"></i> Product Configurator</li><li><i class="fas fa-check"></i> VR-ready</li></ul>
-                <button class="service-btn" onclick="orderPackage('3D Immersive')">Activate →</button>
-            </div>
-            <div class="service-card featured">
-                <div class="popular-badge">🔥 Neural Core</div>
-                <div class="service-icon"><i class="fas fa-brain"></i></div>
-                <h3>AI Automation Suite</h3>
-                <div class="price">$799 <small>/ package</small></div>
-                <ul class="service-features"><li><i class="fas fa-check"></i> WhatsApp Bot AI</li><li><i class="fas fa-check"></i> E-commerce Automation</li><li><i class="fas fa-check"></i> Admin Dashboard</li><li><i class="fas fa-check"></i> Analytics</li></ul>
-                <button class="service-btn" onclick="orderPackage('AI Automation Suite')">Unleash AI →</button>
-            </div>
-            <div class="service-card">
-                <div class="service-icon"><i class="fas fa-shield-virus"></i></div>
-                <h3>CyberGuard Pro</h3>
-                <div class="price">$299 <small>/ audit</small></div>
-                <ul class="service-features"><li><i class="fas fa-check"></i> Security Hardening</li><li><i class="fas fa-check"></i> Pen Testing</li><li><i class="fas fa-check"></i> SSL/Encryption</li><li><i class="fas fa-check"></i> 24/7 Monitoring</li></ul>
-                <button class="service-btn" onclick="orderPackage('CyberGuard Pro')">Secure Now →</button>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects">
-        <h2 class="section-title">✨ Holographic Projects ✨</h2>
-        <div class="projects-grid">
-            <div class="project-card"><div class="project-image"><i class="fas fa-vr-cardboard"></i></div><div class="project-info"><h3>Nexus XR Showroom</h3><p>Interactive 3D product展厅 with real-time raytracing and immersive controls.</p><div class="project-tech"><span class="tech-tag">Three.js</span><span class="tech-tag">WebXR</span><span class="tech-tag">GSAP</span></div></div></div>
-            <div class="project-card"><div class="project-image"><i class="fab fa-whatsapp"></i></div><div class="project-info"><h3>WhatsApp HyperBot</h3><p>Multi-agent WhatsApp system with AI responses, order automation and analytics.</p><div class="project-tech"><span class="tech-tag">Node.js</span><span class="tech-tag">Baileys</span><span class="tech-tag">OpenAI</span></div></div></div>
-            <div class="project-card"><div class="project-image"><i class="fas fa-chart-network"></i></div><div class="project-info"><h3>Cyber Defense Dashboard</h3><p>Real-time threat intelligence dashboard with 3D globe visualization.</p><div class="project-tech"><span class="tech-tag">React</span><span class="tech-tag">D3.js</span><span class="tech-tag">WebSocket</span></div></div></div>
-        </div>
-    </section>
-
-    <section id="contact">
-        <h2 class="section-title">🌐 Neural Link 🌐</h2>
-        <div class="contact-grid">
-            <div class="contact-info"><div class="contact-item"><div class="contact-icon"><i class="fab fa-whatsapp"></i></div><div><strong>Quantum Line</strong><br>+94 77 123 4567</div></div><div class="contact-item"><div class="contact-icon"><i class="fas fa-envelope"></i></div><div><strong>Cyber Dispatch</strong><br>ronin@cybervault.io</div></div><div class="contact-item"><div class="contact-icon"><i class="fab fa-github"></i></div><div><strong>GitHub Matrix</strong><br>/CyberRoninX1</div></div><div class="contact-item"><div class="contact-icon"><i class="fas fa-globe"></i></div><div><strong>Location</strong><br>Anuradhapura | Metaverse</div></div></div>
-            <div class="contact-form"><form id="contactForm"><div class="form-group"><input type="text" placeholder="Your Neural ID" required></div><div class="form-group"><input type="email" placeholder="Quantum Email" required></div><div class="form-group"><textarea rows="5" placeholder="Encrypted Message" required></textarea></div><button type="submit" class="service-btn">Send Transmission →</button></form></div>
-        </div>
-    </section>
-    <footer class="footer"><p>© 2025 CyberRoninX1 | Immersive Architect | Code. Create. Conquer.</p></footer>
-
-    <script type="module">
-        import * as THREE from 'three';
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        scene.background = null;
-        scene.fog = new THREE.FogExp2(0x050510, 0.008);
-        
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 2, 12);
-        camera.lookAt(0,0,0);
-        
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setClearColor(0x000000, 0);
-        container.appendChild(renderer.domElement);
-        
-        // 3D Objects: central core crystal + floating particles
-        const geometry = new THREE.IcosahedronGeometry(1.2, 0);
-        const material = new THREE.MeshStandardMaterial({ color: 0x8b5cf6, emissive: 0x3b0a6e, emissiveIntensity: 0.6, metalness: 0.8, roughness: 0.2 });
-        const coreMesh = new THREE.Mesh(geometry, material);
-        scene.add(coreMesh);
-        
-        const wireframeGeo = new THREE.IcosahedronGeometry(1.35, 0);
-        const wireMat = new THREE.MeshBasicMaterial({ color: 0xc084fc, wireframe: true, transparent: true, opacity: 0.35 });
-        const wireframeCore = new THREE.Mesh(wireframeGeo, wireMat);
-        scene.add(wireframeCore);
-        
-        const ringGeo = new THREE.TorusGeometry(1.8, 0.05, 64, 200);
-        const ringMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, emissive: 0x4c1d95, emissiveIntensity: 0.4 });
-        const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.rotation.x = Math.PI / 2;
-        scene.add(ring);
-        
-        const particlesCount = 1800;
-        const particlesGeometry = new THREE.BufferGeometry();
-        const posArray = new Float32Array(particlesCount * 3);
-        for(let i = 0; i < particlesCount; i++) {
-            posArray[i*3] = (Math.random() - 0.5) * 40;
-            posArray[i*3+1] = (Math.random() - 0.5) * 20;
-            posArray[i*3+2] = (Math.random() - 0.5) * 30 - 15;
-        }
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particleMat = new THREE.PointsMaterial({ color: 0x8b5cf6, size: 0.08, transparent: true, blending: THREE.AdditiveBlending });
-        const particlesMesh = new THREE.Points(particlesGeometry, particleMat);
-        scene.add(particlesMesh);
-        
-        const starFieldGeo = new THREE.BufferGeometry();
-        const starPos = [];
-        for(let i=0;i<1200;i++) {
-            starPos.push((Math.random() - 0.5)*200);
-            starPos.push((Math.random() - 0.5)*100);
-            starPos.push((Math.random() - 0.5)*80 - 40);
-        }
-        starFieldGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(starPos), 3));
-        const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.05, transparent: true, opacity: 0.6 });
-        const stars = new THREE.Points(starFieldGeo, starMat);
-        scene.add(stars);
-        
-        const ambientLight = new THREE.AmbientLight(0x1a1a2e);
-        scene.add(ambientLight);
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-        dirLight.position.set(5,10,7);
-        scene.add(dirLight);
-        const backLight = new THREE.PointLight(0x8b5cf6, 0.5);
-        backLight.position.set(-2,1,-5);
-        scene.add(backLight);
-        const colorLight = new THREE.PointLight(0xa855f7, 0.6);
-        colorLight.position.set(3,2,4);
-        scene.add(colorLight);
-        
-        let time = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-            time += 0.008;
-            coreMesh.rotation.y = time * 0.6;
-            coreMesh.rotation.x = Math.sin(time * 0.4) * 0.2;
-            wireframeCore.rotation.y = time * 0.6;
-            wireframeCore.rotation.x = Math.sin(time * 0.4) * 0.2;
-            ring.rotation.z = time * 0.3;
-            ring.rotation.y = time * 0.2;
-            particlesMesh.rotation.y = time * 0.05;
-            stars.rotation.x = time * 0.02;
-            stars.rotation.y = time * 0.01;
-            camera.position.x += (0 - camera.position.x) * 0.03;
-            camera.lookAt(0,0.5,0);
-            renderer.render(scene, camera);
-        }
-        animate();
-        
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+<script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    
+    // --- 3D Configurator (Sneaker / Tech gadget) ---
+    const container = document.getElementById('config-canvas');
+    const scene = new THREE.Scene();
+    scene.background = null;
+    scene.fog = new THREE.FogExp2(0x05050A, 0.02);
+    
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(3, 2, 5);
+    camera.lookAt(0,0,0);
+    
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setClearColor(0x000000, 0);
+    container.appendChild(renderer.domElement);
+    
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 2.0;
+    controls.enableZoom = true;
+    controls.enablePan = false;
+    
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0x404060);
+    scene.add(ambientLight);
+    const mainLight = new THREE.DirectionalLight(0xffffff, 1);
+    mainLight.position.set(2,5,3);
+    scene.add(mainLight);
+    const fillLight = new THREE.PointLight(0x8b5cf6, 0.5);
+    fillLight.position.set(1,2,3);
+    scene.add(fillLight);
+    const backLight = new THREE.PointLight(0x3b82f6, 0.4);
+    backLight.position.set(-1,1,-2);
+    scene.add(backLight);
+    
+    // Create a stylish sneaker-like model using groups: a rounded cube base + details
+    const sneakerGroup = new THREE.Group();
+    // Main body (rounded cube)
+    const bodyGeo = new THREE.BoxGeometry(1.6, 0.7, 2.4);
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, roughness: 0.3, metalness: 0.2 });
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = 0;
+    body.castShadow = true;
+    body.receiveShadow = false;
+    sneakerGroup.add(body);
+    
+    // Sole
+    const soleGeo = new THREE.BoxGeometry(1.7, 0.2, 2.5);
+    const soleMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.7, metalness: 0.1 });
+    const sole = new THREE.Mesh(soleGeo, soleMat);
+    sole.position.y = -0.45;
+    sneakerGroup.add(sole);
+    
+    // Toe cap
+    const toeGeo = new THREE.SphereGeometry(0.6, 32, 32);
+    const toeMat = new THREE.MeshStandardMaterial({ color: 0xa855f7 });
+    const toe = new THREE.Mesh(toeGeo, toeMat);
+    toe.position.set(0, 0.1, 1.1);
+    toe.scale.set(0.9, 0.5, 0.7);
+    sneakerGroup.add(toe);
+    
+    // Heel detail
+    const heelGeo = new THREE.BoxGeometry(0.8, 0.5, 0.6);
+    const heelMat = new THREE.MeshStandardMaterial({ color: 0xccccdd, metalness: 0.6 });
+    const heel = new THREE.Mesh(heelGeo, heelMat);
+    heel.position.set(0, -0.1, -1.1);
+    sneakerGroup.add(heel);
+    
+    // Lace area
+    const laceGeo = new THREE.TorusKnotGeometry(0.25, 0.05, 64, 8, 2, 3);
+    const laceMat = new THREE.MeshStandardMaterial({ color: 0xffaa55, metalness: 0.3 });
+    const laceKnot = new THREE.Mesh(laceGeo, laceMat);
+    laceKnot.position.set(0, 0.35, 0.5);
+    laceKnot.scale.set(0.7, 0.4, 0.5);
+    sneakerGroup.add(laceKnot);
+    
+    scene.add(sneakerGroup);
+    
+    // Floating particles around configurator
+    const particleCount = 800;
+    const particleGeo = new THREE.BufferGeometry();
+    const particlePos = [];
+    for (let i = 0; i < particleCount; i++) {
+        particlePos.push((Math.random() - 0.5) * 8);
+        particlePos.push((Math.random() - 0.5) * 5);
+        particlePos.push((Math.random() - 0.5) * 8);
+    }
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(particlePos), 3));
+    const particleMatGlow = new THREE.PointsMaterial({ color: 0xc084fc, size: 0.03, transparent: true, blending: THREE.AdditiveBlending });
+    const particlesField = new THREE.Points(particleGeo, particleMatGlow);
+    scene.add(particlesField);
+    
+    // Color change logic
+    const colorChips = document.querySelectorAll('.color-chip');
+    const matBtns = document.querySelectorAll('.mat-btn');
+    let currentMat = 'standard';
+    
+    colorChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            const color = chip.getAttribute('data-color');
+            body.material.color.set(color);
+            toe.material.color.set(color);
         });
-        
-        // GSAP Scroll Animations + Cursor
-        import gsap from 'https://unpkg.com/gsap@3.12.5/index.js';
-        import ScrollTrigger from 'https://unpkg.com/gsap@3.12.5/ScrollTrigger.js';
-        gsap.registerPlugin(ScrollTrigger);
-        
-        gsap.from('.hero-content', { duration: 1.2, y: 60, opacity: 0, ease: 'power3.out' });
-        gsap.from('.skill-card, .service-card, .project-card', { scrollTrigger: { trigger: '#skills', start: 'top 80%' }, y: 50, opacity: 0, duration: 0.7, stagger: 0.1 });
-        
-        const cursor = document.querySelector('.cursor');
-        const follower = document.querySelector('.cursor-follower');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            follower.style.left = e.clientX + 'px';
-            follower.style.top = e.clientY + 'px';
+    });
+    
+    matBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            matBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const type = btn.getAttribute('data-mat');
+            currentMat = type;
+            let metal = 0.2, rough = 0.3;
+            if (type === 'metal') { metal = 0.85; rough = 0.25; }
+            if (type === 'gloss') { metal = 0.4; rough = 0.1; }
+            if (type === 'standard') { metal = 0.2; rough = 0.4; }
+            body.material.metalness = metal;
+            body.material.roughness = rough;
+            toe.material.metalness = metal;
+            toe.material.roughness = rough;
         });
-        document.querySelectorAll('a, button').forEach(el => {
-            el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%, -50%) scale(1.5)'; follower.style.transform = 'translate(-50%, -50%) scale(1.8)'; });
-            el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%, -50%) scale(1)'; follower.style.transform = 'translate(-50%, -50%) scale(1)'; });
+    });
+    
+    function animateConfig() {
+        requestAnimationFrame(animateConfig);
+        controls.update(); // auto-rotate enabled initially
+        particlesField.rotation.y += 0.005;
+        particlesField.rotation.x += 0.002;
+        renderer.render(scene, camera);
+    }
+    animateConfig();
+    
+    window.addEventListener('resize', () => {
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+    });
+    
+    // --- Background 3D scene (immersive floating rings + cubes) ---
+    const bgScene = new THREE.Scene();
+    const bgCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    bgCamera.position.set(0, 2, 12);
+    const bgRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    bgRenderer.setSize(window.innerWidth, window.innerHeight);
+    bgRenderer.setClearColor(0x000000, 0);
+    document.getElementById('canvas-container').appendChild(bgRenderer.domElement);
+    
+    const ringGeoBg = new THREE.TorusGeometry(2.5, 0.08, 64, 300);
+    const ringMatBg = new THREE.MeshStandardMaterial({ color: 0x8b5cf6, emissive: 0x3b0764, emissiveIntensity: 0.4 });
+    const ringBg = new THREE.Mesh(ringGeoBg, ringMatBg);
+    ringBg.rotation.x = Math.PI / 2;
+    bgScene.add(ringBg);
+    
+    const cubeGroup = [];
+    for (let i = 0; i < 60; i++) {
+        const size = Math.random() * 0.15 + 0.08;
+        const cube = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), new THREE.MeshStandardMaterial({ color: 0x9b6df9, emissive: 0x4a1d8c, emissiveIntensity: 0.2 }));
+        cube.position.set((Math.random() - 0.5) * 18, (Math.random() - 0.5) * 12, (Math.random() - 0.5) * 15 - 10);
+        bgScene.add(cube);
+        cubeGroup.push(cube);
+    }
+    
+    const starField = new THREE.BufferGeometry();
+    const starPosArr = [];
+    for (let i = 0; i < 1500; i++) {
+        starPosArr.push((Math.random() - 0.5) * 200);
+        starPosArr.push((Math.random() - 0.5) * 100);
+        starPosArr.push((Math.random() - 0.5) * 70 - 30);
+    }
+    starField.setAttribute('position', new THREE.BufferAttribute(new Float32Array(starPosArr), 3));
+    const starMatBg = new THREE.PointsMaterial({ color: 0xffffff, size: 0.08, transparent: true });
+    const starsBg = new THREE.Points(starField, starMatBg);
+    bgScene.add(starsBg);
+    
+    const lightBg = new THREE.PointLight(0xa855f7, 0.6);
+    lightBg.position.set(2, 3, 4);
+    bgScene.add(lightBg);
+    
+    let bgTime = 0;
+    function animateBg() {
+        requestAnimationFrame(animateBg);
+        bgTime += 0.008;
+        ringBg.rotation.z = bgTime * 0.2;
+        ringBg.rotation.y = bgTime * 0.15;
+        starsBg.rotation.y = bgTime * 0.02;
+        cubeGroup.forEach((c, idx) => { c.rotation.x += 0.01; c.rotation.y += 0.015; });
+        bgRenderer.render(bgScene, bgCamera);
+    }
+    animateBg();
+    window.addEventListener('resize', () => { bgCamera.aspect = window.innerWidth / window.innerHeight; bgCamera.updateProjectionMatrix(); bgRenderer.setSize(window.innerWidth, window.innerHeight); });
+    
+    // --- GSAP Scroll Trigger Animations (morph cards + explode effect)---
+    gsap.registerPlugin(ScrollTrigger);
+    const revealCards = document.querySelectorAll('.reveal-card');
+    revealCards.forEach((card, i) => {
+        gsap.fromTo(card, { opacity: 0, y: 80, scale: 0.9 }, {
+            scrollTrigger: { trigger: card, start: 'top 80%', toggleActions: 'play none none reverse' },
+            opacity: 1, y: 0, scale: 1, duration: 0.8, delay: i * 0.15, ease: 'back.out(1.2)'
         });
-    </script>
-    <script type="module">
-        window.orderPackage = (pkg) => { window.location.href = `https://wa.me/94771234567?text=I'm%20interested%20in%20${encodeURIComponent(pkg)}%20package`; };
-        document.getElementById('contactForm')?.addEventListener('submit', (e) => { e.preventDefault(); alert('✨ Transmission received. Ronin will respond within 24h.'); e.target.reset(); });
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('.nav-links a');
-        window.addEventListener('scroll', () => { let current = ''; sections.forEach(section => { if (scrollY >= section.offsetTop - 250) current = section.getAttribute('id'); }); navLinks.forEach(link => { link.classList.remove('active'); if (link.getAttribute('href') === `#${current}`) link.classList.add('active'); }); });
-    </script>
+    });
+    
+    // Simulate 'explode' effect on hover of project cards
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            gsap.to(card, { scale: 1.02, duration: 0.3, boxShadow: '0 0 30px rgba(139,92,246,0.6)' });
+        });
+        card.addEventListener('mouseleave', () => { gsap.to(card, { scale: 1, boxShadow: '0px 0px 0px' }); });
+    });
+    
+    // Satisfying motion reel alert
+    document.getElementById('reelBtn').addEventListener('click', () => {
+        alert('🎧 Satisfying 3D Motion Reel: Rotating sneakers, morphing cars, particle bursts — trending audio integration ready.');
+    });
+    document.getElementById('contactBtn').addEventListener('click', () => {
+        window.location.href = 'https://wa.me/94771234567?text=I%20want%20a%203D%20configurator%20like%20CyberRoninX1';
+    });
+    
+    // Custom cursor & nav active
+    const cursor = document.querySelector('.cursor');
+    const follower = document.querySelector('.cursor-follower');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        follower.style.left = e.clientX + 'px';
+        follower.style.top = e.clientY + 'px';
+    });
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => { if (scrollY >= section.offsetTop - 300) current = section.getAttribute('id'); });
+        navLinks.forEach(link => { link.classList.remove('active'); if (link.getAttribute('href') === `#${current}`) link.classList.add('active'); });
+    });
+</script>
 </body>
 </html>
